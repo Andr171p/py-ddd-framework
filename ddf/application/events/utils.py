@@ -1,5 +1,19 @@
+from typing import Any
+
 import asyncio
 from collections.abc import Awaitable, Callable, Iterable
+from dataclasses import asdict, fields
+
+from ddf.domain.events import Event
+
+_EVENT_FIELDS: frozenset[str] = frozenset(field.name for field in fields(Event))
+
+
+def get_event_payload(event: Event) -> dict[str, Any]:
+    """Получает кастомные поля события (полезная нагрузка)."""
+
+    event_dict = asdict(event)
+    return {k: v for k, v in event_dict.items() if k not in _EVENT_FIELDS}
 
 
 async def run_in_parallel[T](

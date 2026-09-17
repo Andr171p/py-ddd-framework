@@ -1,9 +1,8 @@
 from ddf.application.uow import UnitOfWork
-from ddf.domain.events import Event
 from ddf.domain.models import Entity
 
 from .event_store import EventStore
-from .types import EventPublisher
+from .types import CollectedEvent, EventPublisher
 
 
 class EventDispatcher:
@@ -18,13 +17,14 @@ class EventDispatcher:
         self.event_store = event_store
 
     async def __call__(self, *entities: Entity) -> None:
-        events: list[Event] = []
+        collected: list[CollectedEvent] = []
+
         for entity in entities:
-            events.extend(entity.collect_events())
+            collected.extend((event, entity) for event in entity.collect_events())
 
         try:
-            if self.event_store is not None and events:
-                await self.event_store.record_all(events)
+            if self.event_store is not None and collected:
+                await self.event_store.record_all(collected)
 
             await self._uow.commit()
 
@@ -32,5 +32,5 @@ class EventDispatcher:
             await self._uow.rollback()
             raise
 
-        if events:
-            await self._event_publisher(events)
+        if collected:
+            await self._event_publisher([event for event, _ in collected])
