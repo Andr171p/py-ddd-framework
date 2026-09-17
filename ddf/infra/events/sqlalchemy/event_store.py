@@ -2,7 +2,8 @@ from collections.abc import Sequence
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ddf.application.events import CollectedEvent, get_event_context, get_event_payload
+from ddf.application.context import get_context
+from ddf.application.events import CollectedEvent, get_event_payload
 from ddf.domain.events import Event
 from ddf.domain.models import Entity
 
@@ -10,7 +11,8 @@ from .models import EventOrm
 
 
 def _build_event_orm(event: Event, entity: Entity) -> EventOrm:
-    correlation_id, meta = get_event_context()
+    context = get_context()
+    meta = {k: v for k, v in context.items() if k != "correlation_id"}
     return EventOrm(
         event_id=event.event_id,
         event_type=event.event_type,
@@ -18,7 +20,7 @@ def _build_event_orm(event: Event, entity: Entity) -> EventOrm:
         occurred_on=event.occurred_on,
         entity_id=entity.id,
         entity_type=type(entity).__name__,
-        correlation_id=correlation_id,
+        correlation_id=context.get("correlation_id"),
         meta=meta,
         payload=get_event_payload(event),
     )
