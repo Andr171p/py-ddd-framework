@@ -1,0 +1,73 @@
+### Python ###
+# Байт-код
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Логи и кэши
+*.log
+*.cache
+*.pot
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# VirtualEnv
+venv/
+.env/
+.venv/
+ENV/
+env/
+
+# Дистрибуция и установка
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Тесты и покрытие
+.coverage
+htmlcov/
+.tox/
+.nox/
+test-results/
+unit.xml
+
+# IDE и редакторы
+.vscode/
+.idea/
+.gigaide
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+*.iml
+
+# Операционные системы
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Безопасность
+secrets.env
+*.secret
+.env.local
+.env.
+.env
+.env.prod
