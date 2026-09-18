@@ -3,10 +3,18 @@ from typing import Any
 import asyncio
 from collections.abc import Awaitable, Callable, Iterable
 from dataclasses import asdict, fields
+from functools import cache
+
+from pydantic import TypeAdapter
 
 from ddf.domain.events import Event
 
 _EVENT_FIELDS: frozenset[str] = frozenset(field.name for field in fields(Event))
+
+
+@cache
+def _get_event_type_adapter(event_cls: type[Event]) -> TypeAdapter[Event]:
+    return TypeAdapter(event_cls)
 
 
 def get_event_payload(event: Event) -> dict[str, Any]:
@@ -14,6 +22,21 @@ def get_event_payload(event: Event) -> dict[str, Any]:
 
     event_dict = asdict(event)
     return {k: v for k, v in event_dict.items() if k not in _EVENT_FIELDS}
+
+
+def deserialize_event(event_type: str, payload: dict[str, Any]) -> Event:
+    """Восстанавливает событие из сохранённого состояния."""
+
+    if (event_cls := Event.get_event_class(event_type)) is None:
+        raise ValueError(f"Unknown event type: {event_type!r}. Ensure the event module is imported.")
+
+    return _get_event_type_adapter(event_cls).validate_python(payload)
+
+
+def serialize_event(event: Event) -> dict[str, Any]:
+    """Сериализует полное состояние события в валидный JSON."""
+
+    return _get_event_type_adapter(type(event)).dump_python(event, mode="json")
 
 
 async def run_in_parallel[T](
