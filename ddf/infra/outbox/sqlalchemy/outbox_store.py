@@ -11,8 +11,9 @@ from .models import OutboxMessageOrm
 
 
 class SqlAlchemyOutboxStore:
-    def __init__(self, session: AsyncSession) -> None:
+    def __init__(self, session: AsyncSession, *, notify_channel: str | None = None) -> None:
         self._session = session
+        self._notify_channel = notify_channel
 
     async def save_all(self, messages: Sequence[OutboxMessage]) -> None:
         if not messages:
@@ -31,6 +32,9 @@ class SqlAlchemyOutboxStore:
         )
 
         await self._session.execute(stmt)
+
+        if self._notify_channel is not None:
+            await self._session.execute(select(func.pg_notify(self._notify_channel, "")))
 
     async def acquire(self, *, limit: int) -> tuple[OutboxMessage, ...]:
         if limit <= 0:
