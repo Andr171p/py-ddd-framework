@@ -18,6 +18,9 @@ sqlalchemy = [
 rabbit = [
     "faststream[rabbit]>=0.7.5",
 ]
+ai = [
+    "openai>=3.16.2",
+]
 
 [dependency-groups]
 dev = [
