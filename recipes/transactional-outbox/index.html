@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://example.invalid/ddf/getting-started/installation/">
+        <link rel="canonical" href="https://example.invalid/ddf/recipes/transactional-outbox/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../cached-repository/">
       
       
-        <link rel="next" href="../quickstart/">
+        <link rel="next" href="../../best-practices/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Установка - DDF</title>
+        <title>Transactional Outbox в use case - DDF</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#transactional-outbox-use-case" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Установка
+              Transactional Outbox в use case
             
           </span>
         </div>
@@ -230,13 +230,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
           
   
   
@@ -292,11 +290,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../recipes/dsl-endpoint/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../dsl-endpoint/" class="md-tabs__link">
           
   
   
@@ -412,31 +412,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -454,7 +449,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -469,37 +464,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Установка
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -515,70 +483,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Содержание">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Содержание
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Требования
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Подключение к проекту
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Локальная документация
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Быстрая проверка
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -591,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -619,7 +523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../project-structure/" class="md-nav__link">
+      <a href="../../getting-started/project-structure/" class="md-nav__link">
         
   
   
@@ -1133,26 +1037,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -1170,7 +1079,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1188,7 +1097,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/dsl-endpoint/" class="md-nav__link">
+      <a href="../dsl-endpoint/" class="md-nav__link">
         
   
   
@@ -1216,7 +1125,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../recipes/cached-repository/" class="md-nav__link">
+      <a href="../cached-repository/" class="md-nav__link">
         
   
   
@@ -1241,10 +1150,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../recipes/transactional-outbox/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transactional Outbox в use case
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1260,6 +1196,37 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worker
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1613,43 +1580,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#worker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Требования
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Подключение к проекту
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Локальная документация
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Быстрая проверка
+        Worker
       
     </span>
   </a>
@@ -1673,42 +1607,70 @@
 
 
 
-<h1 id="_1">Установка<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="_2">Требования<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<p>DDF использует современный синтаксис обобщений Python (<code>class Cache[T]</code>) и генерацию UUIDv7 из стандартной библиотеки. Нужен <strong>Python 3.14 или новее</strong>.</p>
-<p>Проект управляет зависимостями через <a href="https://docs.astral.sh/uv/">uv</a>. Его можно установить один раз согласно официальной инструкции.</p>
-<h2 id="_3">Подключение к проекту<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>Пока DDF развивается внутри этого репозитория, удобнее добавить его как зависимость по пути или Git-зависимость в проект-потребитель. Для работы в самом репозитории достаточно:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--all-groups
+<h1 id="transactional-outbox-use-case">Рецепт: Transactional Outbox в use case<a class="headerlink" href="#transactional-outbox-use-case" title="Permanent link">&para;</a></h1>
+<p>Записывайте бизнес-изменение и <code>OutboxMessage</code> через объекты, работающие на одной <code>AsyncSession</code>/Unit of Work. Commit должен быть один — после обеих записей.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.application.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_event_payload</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.application.context</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_context_value</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.application.outbox</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutboxMessage</span><span class="p">,</span> <span class="n">OutboxStore</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.application.uow</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnitOfWork</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">pay_invoice</span><span class="p">(</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">invoice_id</span><span class="p">:</span> <span class="n">UUID</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">invoices</span><span class="p">:</span> <span class="n">InvoiceRepository</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">outbox</span><span class="p">:</span> <span class="n">OutboxStore</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">uow</span><span class="p">:</span> <span class="n">UnitOfWork</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">invoice</span> <span class="o">=</span> <span class="k">await</span> <span class="n">invoices</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">invoice_id</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="k">if</span> <span class="n">invoice</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="k">raise</span> <span class="n">InvoiceNotFound</span><span class="p">(</span><span class="n">invoice_id</span><span class="p">)</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">invoice</span><span class="o">.</span><span class="n">pay</span><span class="p">()</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="k">await</span> <span class="n">invoices</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">invoice</span><span class="p">)</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">events</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">invoice</span><span class="o">.</span><span class="n">collect_events</span><span class="p">())</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="k">await</span> <span class="n">outbox</span><span class="o">.</span><span class="n">save_all</span><span class="p">([</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        <span class="n">OutboxMessage</span><span class="p">(</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>            <span class="nb">type</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">event_type</span><span class="p">,</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="n">occurred_on</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">occurred_on</span><span class="p">,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>            <span class="n">payload</span><span class="o">=</span><span class="n">get_event_payload</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>            <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s2">"correlation_id"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_context_value</span><span class="p">(</span><span class="s2">"correlation_id"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))},</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="p">)</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="p">])</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="k">await</span> <span class="n">uow</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 </span></code></pre></div>
-<p>Основной набор уже включает FastAPI, Pydantic, Redis, <code>orjson</code> и MessagePack. Необязательные интеграции устанавливаются явно:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SQLAlchemy 2 и asyncpg</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>sqlalchemy
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># FastStream с RabbitMQ</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>rabbit
+<p>Данный вариант сознательно <strong>не</strong> вызывает <code>EventDispatcher</code>: тот извлечёт события и сразу выполнит commit-then-publish, то есть это другой delivery path. Если нужен одновременно audit Event Store и outbox, запишите обе проекции из сохранённого <code>events</code> до единственного commit.</p>
+<h2 id="worker">Worker<a class="headerlink" href="#worker" title="Permanent link">&para;</a></h2>
+<p>Worker создаёт свежие session/UoW, store и processor на каждый batch. Не делите одну <code>AsyncSession</code> между бесконечным циклом и параллельными worker-ами.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.application.outbox</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutboxConfig</span><span class="p">,</span> <span class="n">OutboxProcessor</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.infra.outbox.sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqlAlchemyOutboxStore</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.infra.outbox.worker</span><span class="w"> </span><span class="kn">import</span> <span class="n">OutboxWorkerConfig</span><span class="p">,</span> <span class="n">run_polling_worker</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nd">@asynccontextmanager</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">processor_factory</span><span class="p">():</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">session_factory</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="k">yield</span> <span class="n">OutboxProcessor</span><span class="p">(</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>            <span class="c1"># AsyncSession реализует требуемые commit/rollback/flush.</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            <span class="c1"># В приложении можно передать собственный UnitOfWork-адаптер.</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="n">uow</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="n">outbox_store</span><span class="o">=</span><span class="n">SqlAlchemyOutboxStore</span><span class="p">(</span><span class="n">session</span><span class="p">),</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="n">publisher</span><span class="o">=</span><span class="n">integration_publisher</span><span class="p">,</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            <span class="n">config</span><span class="o">=</span><span class="n">OutboxConfig</span><span class="p">(),</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="p">)</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="k">await</span> <span class="n">run_polling_worker</span><span class="p">(</span><span class="n">processor_factory</span><span class="p">,</span> <span class="n">OutboxWorkerConfig</span><span class="p">())</span>
 </span></code></pre></div>
-<p>В будущем, после публикации пакета, установка будет выглядеть как <code>uv add py-ddd-framework[sqlalchemy]</code>.</p>
-<h2 id="_4">Локальная документация<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p>Зависимости сайта вынесены в отдельную группу <code>docs</code>, поэтому не попадут в runtime-окружение приложения:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>uv<span class="w"> </span>run<span class="w"> </span>--group<span class="w"> </span>docs<span class="w"> </span>mkdocs<span class="w"> </span>serve
-</span></code></pre></div>
-<p>Сайт будет доступен по адресу, который выведет MkDocs (обычно <code>http://127.0.0.1:8000</code>). Для проверяемой статической сборки:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>run<span class="w"> </span>--group<span class="w"> </span>docs<span class="w"> </span>mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
-</span></code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Почему отдельная группа</p>
-<p>Генератор сайта нужен CI и авторам документации, но не production-приложению. <code>dependency-groups.docs</code> сохраняет этот инструмент в lock-файле, не расширяя набор зависимостей пакета.</p>
+<p><code>integration_publisher</code> должен формировать transport-сообщение со стабильным idempotency key. См. ограничение о восстановлении <code>Event</code> в <a href="../../features/outbox/">руководстве по Outbox</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Не публикуйте внутри транзакции</p>
+<p>Не вызывайте broker перед <code>uow.commit()</code>: при rollback consumer увидит несуществующее состояние. Не публикуйте и сразу после commit в том же use case, если эта интеграция критична: падение процесса создаст потерю между БД и сетью.</p>
 </div>
-<h2 id="_5">Быстрая проверка<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">ddf.domain.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Entity</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">entity</span> <span class="o">=</span> <span class="n">Entity</span><span class="p">()</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>       <span class="c1"># UUIDv7</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">created_at</span><span class="p">)</span>  <span class="c1"># время в UTC</span>
-</span></code></pre></div>
-<p>Не создавайте <code>Entity</code> напрямую в прикладном коде: обычно от него наследуется модель конкретной предметной области.</p>
 
 
 

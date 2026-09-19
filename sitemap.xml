@@ -2,82 +2,110 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://example.invalid/ddf/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/best-practices/</loc>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/concepts/architecture/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/concepts/context/</loc>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/concepts/entities/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/concepts/events/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/concepts/persistence/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/decisions/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/decisions/0001-use-uuidv7/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/decisions/0002-pythonic-ddd/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/decisions/0003-data-mapper/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/decisions/0004-events-after-commit/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/decisions/adr-summary/</loc>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/features/ai-routing/</loc>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/features/caching/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/features/crud/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/features/dsl/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/features/event-store/</loc>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/features/outbox/</loc>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/features/pagination/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/features/sqlalchemy/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/getting-started/installation/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/getting-started/project-structure/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/getting-started/quickstart/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/recipes/cached-repository/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
     </url>
     <url>
          <loc>https://example.invalid/ddf/recipes/dsl-endpoint/</loc>
-         <lastmod>2026-09-17</lastmod>
+         <lastmod>2026-09-19</lastmod>
+    </url>
+    <url>
+         <loc>https://example.invalid/ddf/recipes/transactional-outbox/</loc>
+         <lastmod>2026-09-19</lastmod>
     </url>
 </urlset>
