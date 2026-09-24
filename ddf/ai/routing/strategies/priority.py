@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 
-from ddf.ai.models import ModelSpec
-from ddf.ai.routing.routing_request import ModelRoutingRequest
+from ddf.ai.catalog import ModelSpec
+from ddf.ai.routing.models import ModelRoutingRequest
 from ddf.ai.routing.types import RoutingStrategy
 
 

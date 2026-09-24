@@ -2,10 +2,13 @@
 
 DDF не требует единственного верного дерева каталогов. Граница важнее расположения: бизнес-правила не должны знать, что запрос пришёл из FastAPI и что данные лежат в PostgreSQL.
 
-Практичная отправная точка для сервиса заказов:
+Практичная отправная точка для сервиса заказов — четыре слоя внутри bounded context. Название `api` подчёркивает, что это только один из возможных входов: рядом могут появиться CLI или consumer брокера.
 
 ```text
 src/orders/
+├── api/
+│   ├── http/              # FastAPI routers, request/response-схемы
+│   └── dependencies.py    # HTTP dependency injection
 ├── domain/
 │   ├── models.py          # Order, OrderLine, события, инварианты
 │   └── value_objects.py   # Money, OrderNumber
@@ -13,12 +16,11 @@ src/orders/
 │   ├── commands.py        # use case и DTO команды
 │   ├── repositories.py    # узкие Protocol, если нужны предметные методы
 │   └── services.py
-├── infrastructure/
+├── infra/
 │   ├── sqlalchemy/        # ORM-модели, Data Mapper, реализации repo/UoW
 │   ├── cache.py
 │   └── messaging.py
-└── presentation/
-    └── http.py            # FastAPI routers, dependency injection, схемы HTTP
+└── bootstrap.py            # composition root для HTTP, воркеров и CLI
 ```
 
 ## Как распределять код
@@ -27,10 +29,16 @@ src/orders/
 | --- | --- | --- |
 | `domain` | правила, состояние, инварианты, события | HTTP, ORM, Redis, брокере |
 | `application` | сценарии, транзакционная граница, оркестрация | SQL-выражениях и маршрутах |
-| `infrastructure` | SQLAlchemy, Redis, RabbitMQ, внешние API | бизнес-решениях |
-| `presentation` | разбор запроса, авторизация, перевод ошибок | внутренностях БД |
+| `infra` | SQLAlchemy, Redis, RabbitMQ, внешние API | бизнес-решениях |
+| `api` | разбор запроса, авторизация, перевод ошибок | внутренностях БД |
 
-Небольшие DTO, нужные только HTTP API, держите у `presentation`. DTO команды, описывающие намерение пользователя (`CreateOrder`), — у `application`. Сам `Order` не обязан быть Pydantic-моделью: это снижает связность с transport-слоем.
+Небольшие DTO, нужные только HTTP API, держите у `api`. DTO команды, описывающие намерение пользователя (`CreateOrder`), — у `application`. Сам `Order` не обязан быть Pydantic-моделью: это снижает связность с transport-слоем.
+
+## Где поместить AI
+
+AI — не пятый DDD-слой. В приложении ему обычно место рядом с тем сценарием, которому он служит: prompt и use case — в `application`, бизнес-проверки результата — в `domain`, клиенты провайдеров и конфигурация маршрутизации — в `infra/ai`. Если AI нужен нескольким bounded contexts, вынесите только техническую интеграцию в общий пакет, а не правила принятия решений.
+
+`ddf.ai` — отдельная optional capability самого фреймворка, потому что она объединяет routing и OpenAI-compatible клиент. Это не означает, что прикладной код должен зависеть от AI во всех слоях.
 
 !!! tip "Один bounded context — один пакет"
 

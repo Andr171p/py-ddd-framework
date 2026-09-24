@@ -1,6 +1,6 @@
-from ddf.ai.models import ModelSpec
+from ddf.ai.catalog import ModelSpec
 
-from .routing_request import ModelRoutingRequest
+from .models import ModelRoutingRequest
 
 
 def model_matches(model: ModelSpec, request: ModelRoutingRequest) -> bool:

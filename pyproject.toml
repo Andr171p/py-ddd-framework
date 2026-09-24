@@ -1,3 +1,10 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["ddf"]
+
 [project]
 name = "py-ddd-framework"
 version = "0.1.0"
@@ -19,6 +26,7 @@ rabbit = [
     "faststream[rabbit]>=0.7.5",
 ]
 ai = [
+    "mdit-py-plugins>=0.6.1",
     "openai>=3.16.2",
 ]
 

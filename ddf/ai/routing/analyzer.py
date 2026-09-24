@@ -2,9 +2,9 @@ from typing import Any
 
 from collections.abc import Mapping, Sequence
 
-from ddf.ai.models import Modality, ModelCapability
+from ddf.ai.catalog import Modality, ModelCapability
 
-from .routing_request import ModelRoutingRequest
+from .models import ModelRoutingRequest
 
 
 def analyze_response_request(

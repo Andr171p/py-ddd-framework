@@ -2,9 +2,9 @@ from typing import Any
 
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 
-from ddf.ai.models import ModelSpec
+from ddf.ai.catalog import ModelSpec
 
-from .routing_request import ModelRoutingRequest
+from .models import ModelRoutingRequest
 
 type RoutingStrategy = Callable[
     [Sequence[ModelSpec], ModelRoutingRequest],

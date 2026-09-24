@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from .models.model_spec import ModelPricing
+from .catalog.models import ModelPricing
 
 
 def estimate_cost(

@@ -1,11 +1,11 @@
 import inspect
 from collections.abc import Sequence
 
-from ddf.ai.exceptions import ModelRoutingError, NoSuitableModelError
-from ddf.ai.models import ModelSpec
+from ddf.ai.catalog import ModelSpec
 
+from .exceptions import ModelRoutingError, NoSuitableModelError
 from .matching import model_matches
-from .routing_request import ModelRoutingRequest
+from .models import ModelRoutingRequest
 from .types import RoutingStrategy
 
 

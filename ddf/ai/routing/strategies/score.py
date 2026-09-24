@@ -1,8 +1,8 @@
 from collections.abc import Callable, Sequence
 from enum import StrEnum
 
-from ddf.ai.models import ModelSpec
-from ddf.ai.routing.routing_request import ModelRoutingRequest
+from ddf.ai.catalog import ModelSpec
+from ddf.ai.routing.models import ModelRoutingRequest
 from ddf.ai.routing.types import RoutingStrategy
 
 type ModelScore = Callable[[ModelSpec, ModelRoutingRequest], float | None]

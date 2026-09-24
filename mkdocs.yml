@@ -60,6 +60,7 @@ nav:
       - Структура проекта: getting-started/project-structure.md
   - Концепции:
       - Архитектура: concepts/architecture.md
+      - Контекст выполнения: concepts/context.md
       - Сущности и Value Object: concepts/entities.md
       - Репозитории и Unit of Work: concepts/persistence.md
       - Доменные события: concepts/events.md
@@ -69,11 +70,18 @@ nav:
       - Пагинация и сортировка: features/pagination.md
       - Кэширование: features/caching.md
       - SQLAlchemy: features/sqlalchemy.md
+      - Журнал доменных событий: features/event-store.md
+      - Transactional Outbox: features/outbox.md
+      - "AI: маршрутизация моделей": features/ai-routing.md
   - Рецепты:
       - DSL в FastAPI: recipes/dsl-endpoint.md
       - Репозиторий с кэшем: recipes/cached-repository.md
+      - Transactional Outbox в use case: recipes/transactional-outbox.md
+  - Практики:
+      - Best practices: best-practices/index.md
   - Архитектурные решения:
       - ADR: decisions/index.md
+      - Реестр DDF-A01…A40: decisions/adr-summary.md
       - '0001: UUIDv7': decisions/0001-use-uuidv7.md
       - '0002: Pythonic DDD': decisions/0002-pythonic-ddd.md
       - '0003: Data Mapper': decisions/0003-data-mapper.md

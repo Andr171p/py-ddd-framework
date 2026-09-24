@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 
-from ddf.ai.models import ModelSpec
-from ddf.ai.routing.routing_request import ModelRoutingRequest
+from ddf.ai.catalog import ModelSpec
+from ddf.ai.routing.models import ModelRoutingRequest
 
 
 def smallest_context(candidates: Sequence[ModelSpec], request: ModelRoutingRequest) -> ModelSpec | None:

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt
 from pydantic.alias_generators import to_camel
 
-from ddf.ai.models import Modality, ModelCapability
+from ddf.ai.catalog import Modality, ModelCapability
 
 
 class ModelRoutingRequest(BaseModel):

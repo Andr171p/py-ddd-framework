@@ -14,6 +14,7 @@ from ddf.domain.models import AggregateRoot
 
 @dataclass(frozen=True)
 class TaskCompleted(Event):
+    event_type = "tasks.task-completed"
     task_id: str = ""
 
 

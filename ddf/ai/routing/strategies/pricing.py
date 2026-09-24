@@ -1,8 +1,8 @@
 from collections.abc import Sequence
 
-from ddf.ai.models import ModelSpec
-from ddf.ai.routing.routing_request import ModelRoutingRequest
-from ddf.ai.utils import estimate_cost
+from ddf.ai.catalog import ModelSpec
+from ddf.ai.routing.models import ModelRoutingRequest
+from ddf.ai.usage import estimate_cost
 
 
 def cheapest_model(candidates: Sequence[ModelSpec], request: ModelRoutingRequest) -> ModelSpec | None:
