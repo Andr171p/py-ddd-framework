@@ -16,7 +16,7 @@ async def get_or_raise_not_found[EntityT: Entity](
     entity_type: type[EntityT],
 ) -> EntityT:
     if (obj := await func(uid)) is None:
-        raise NotFoundError(f"{entity_type.__class__.__name__} with ID {uid} not found.")
+        raise NotFoundError(f"{entity_type.__name__} with ID {uid} not found.")
 
     return obj
 

@@ -1,6 +1,6 @@
 from typing import Any
 
-from collections.abc import Callable, Collection, Mapping
+from collections.abc import Callable, Collection
 
 from sqlalchemy import ColumnElement, UnaryExpression, and_, not_, or_
 
@@ -52,14 +52,17 @@ def compile_filter[ModelT: Base](
     if isinstance(expression, Condition):
         return _compile_condition(model, expression, allowed_fields)
 
-    if isinstance(expression, Search) and search is None:
-        raise ValueError("Full-text search is not supported.")
+    if isinstance(expression, Search):
+        if search is None:
+            raise ValueError("Full-text search is not supported.")
+
+        return search(expression.query)
 
     if isinstance(expression, Group):
-        return _compile_group(expression, allowed_fields, search)
+        return _compile_group(model, expression, allowed_fields, search)
 
     if isinstance(expression, Negation):
-        return not_(compile_filter(expression.filter_, allowed_fields, search))
+        return not_(compile_filter(model, expression.filter_, allowed_fields, search))
 
     raise ValueError(f"Unsupported filter type: {type(expression)}")
 
@@ -119,9 +122,10 @@ def _compile_condition[ModelT: Base](  # noqa: C901, PLR0911
     raise ValueError(f"Unsupported filter operator: '{condition.op}'")
 
 
-def _compile_group(
+def _compile_group[ModelT: Base](
+    model: type[ModelT],
     group: Group,
-    fields: Mapping[str, ColumnElement[Any]],
+    allowed_fields: Collection[str],
     search: SearchFunc | None,
 ) -> ColumnElement[bool]:
     """Компилирует группу фильтров (Group) объединяя их логическим оператором AND или OR.
@@ -130,7 +134,7 @@ def _compile_group(
     в группе, а затем оборачивает их в SQLAlchemy-функции `and_()` или `or_()`.
     """
 
-    filters = tuple(compile_filter(filter_, fields, search) for filter_ in group.filters)
+    filters = tuple(compile_filter(model, filter_, allowed_fields, search) for filter_ in group.filters)
 
     if not filters:
         raise ValueError("Filter group cannot be empty.")

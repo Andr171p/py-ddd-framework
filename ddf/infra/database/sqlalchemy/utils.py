@@ -6,8 +6,10 @@ from collections.abc import Callable
 from datetime import datetime
 from uuid import UUID
 
+import asyncpg
 from pydantic import BaseModel, ValidationError
 from sqlalchemy import ColumnElement, Select, and_, asc, desc, func, or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ddf.application.dtos import (
@@ -26,6 +28,8 @@ from .types import SortFunc
 type CursorField = Literal["id", "created_at", "updated_at"]
 
 _ALLOWED_CURSOR_FIELDS: frozenset[CursorField] = frozenset({"id", "created_at", "updated_at"})
+
+_POSTGRES_UNIQUE_VIOLATION_CODE = "23505"
 
 
 class _CursorPayload(BaseModel):
@@ -351,3 +355,27 @@ async def paginate[ModelT: Base, ItemT](
 
     items = [from_model(model) for model in models] if from_model is not None else models
     return create_page(pagination, items, **kwargs)
+
+
+# ==========================================================================================================
+# Exception helpers
+# ==========================================================================================================
+
+
+def is_unique_violation(exc: IntegrityError) -> bool:
+    orig = exc.orig
+
+    if isinstance(orig, asyncpg.exceptions.UniqueViolationError):
+        return True
+
+    return bool(hasattr(orig, "sqlstate") and orig.sqlstate == _POSTGRES_UNIQUE_VIOLATION_CODE)
+
+
+def get_constraint_name(exc: IntegrityError) -> str | None:
+    """Извлекает имя нарушенного ограничения из ошибки."""
+    orig = exc.orig
+
+    if orig and hasattr(orig, "as_dict"):
+        return orig.as_dict().get("constraint_name")
+
+    return None

@@ -3,16 +3,18 @@ from typing import ClassVar
 from uuid import UUID
 
 from sqlalchemy import delete, exists, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ddf.application.dtos import Page, Pagination, QueryDTO, Sort
+from ddf.application.exceptions import UniqueConstraintViolationError
 from ddf.domain.models import Entity
 
 from .base import Base
 from .data_mapper import DataMapper
 from .filters import compile_filter
 from .types import SearchFunc
-from .utils import paginate
+from .utils import get_constraint_name, is_unique_violation, paginate
 
 
 class SqlAlchemyRepository[EntityT: Entity, ModelT: Base]:
@@ -26,10 +28,21 @@ class SqlAlchemyRepository[EntityT: Entity, ModelT: Base]:
 
     async def create(self, entity: EntityT) -> EntityT:
 
-        model = self.data_mapper.to_model(entity)
-        self._session.add(model)
-        await self._session.flush()
-        return self.data_mapper.from_model(model)
+        try:
+            model = self.data_mapper.to_model(entity)
+            self._session.add(model)
+            await self._session.flush()
+            return self.data_mapper.from_model(model)
+
+        except IntegrityError as exc:
+            constraint = get_constraint_name(exc)
+
+            if is_unique_violation(exc):
+                raise UniqueConstraintViolationError(
+                    f"Unique constraint violation error: {constraint}.",
+                ) from exc
+
+            raise
 
     async def read(self, uid: UUID) -> EntityT | None:
         stmt = select(self.model).where(self.model.id == uid)

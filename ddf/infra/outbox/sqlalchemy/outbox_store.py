@@ -21,7 +21,7 @@ class SqlAlchemyOutboxStore:
 
         stmt = insert(OutboxMessageOrm).values([data_mapper.to_values(message) for message in messages])
         stmt = stmt.on_conflict_do_update(
-            index_element=[OutboxMessageOrm.id],
+            index_elements=[OutboxMessageOrm.id],
             set_={
                 "attempts": stmt.excluded.attempts,
                 "available_at": stmt.excluded.available_at,

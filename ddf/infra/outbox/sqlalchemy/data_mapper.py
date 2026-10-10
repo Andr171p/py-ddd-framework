@@ -24,6 +24,7 @@ def from_model(orm: OutboxMessageOrm) -> OutboxMessage:
 
 def to_values(message: OutboxMessage) -> dict[str, Any]:
     message_dict = asdict(message)
+    message_dict["type_"] = message_dict.pop("type")
     message_dict["payload"] = dict(message.payload)
     message_dict["meta"] = dict(message.meta)
     return message_dict
