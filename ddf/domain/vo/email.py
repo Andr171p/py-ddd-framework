@@ -17,7 +17,7 @@ class Email:
         except EmailNotValidError as e:
             raise ValueError("Invalid email address") from e
 
-        object.__setattr__(self, "string", normalized)
+        object.__setattr__(self, "value", normalized)
 
     def __str__(self) -> str:
         return self.value

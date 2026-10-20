@@ -6,11 +6,15 @@ import base64
 from collections.abc import Mapping
 
 from bson import json_util
+from bson.binary import UuidRepresentation
 from pymongo.asynchronous.collection import AsyncCollection
 
 from ddf.application.dtos import CursorPagination, OffsetPagination, Page, Pagination, create_page
 
 from .mongo_base_model import MongoBaseModel
+
+# UUIDv7 `_id` и aware datetime должны переживать round-trip через курсор.
+_CURSOR_JSON_OPTIONS = json_util.JSONOptions(uuid_representation=UuidRepresentation.STANDARD, tz_aware=True)
 
 
 def _encode_cursor(document: Mapping[str, Any], *, sort: list[tuple[str, int]]) -> str:
@@ -23,7 +27,7 @@ def _encode_cursor(document: Mapping[str, Any], *, sort: list[tuple[str, int]]) 
         ],
     }
 
-    raw = json_util.dumps(payload, separators=(",", ":")).encode()
+    raw = json_util.dumps(payload, separators=(",", ":"), json_options=_CURSOR_JSON_OPTIONS).encode()
     return base64.urlsafe_b64encode(raw).decode().rstrip("=")
 
 
@@ -32,7 +36,7 @@ def _decode_cursor(cursor: str) -> list[Any]:
 
     try:
         raw = base64.urlsafe_b64decode(cursor + padding)
-        payload = json_util.loads(raw)
+        payload = json_util.loads(raw, json_options=_CURSOR_JSON_OPTIONS)
     except Exception as exc:
         raise ValueError("Invalid pagination cursor.") from exc
 

@@ -54,7 +54,7 @@ def _compile_group(group: Group, *, fields: Mapping[str, str]) -> dict[str, Any]
     if len(filters) == 1:
         return filters[0]
 
-    operator = "$and" if group.op == "and" else "$or"
+    operator = "$and" if group.op == "$and" else "$or"
     return {operator: filters}
 
 
@@ -90,20 +90,20 @@ def _compile_condition(condition: Condition, *, fields: Mapping[str, str]) -> di
             return {
                 field: {"$nin": list(value)}}
 
-        case "isNull":
+        case "$isNull":
             return {field: {"$type": 10}}
 
         case "$isNotNull":
             return {field: {"$exists": True, "$ne": None}}
 
-        case "like":
+        case "$like":
             return {
                 field: {
                     "$regex": _compile_like_pattern(str(value)),
                 },
             }
 
-        case "ilike":
+        case "$ilike":
             return {
                 field: {
                     "$regex": _compile_like_pattern(str(value)),

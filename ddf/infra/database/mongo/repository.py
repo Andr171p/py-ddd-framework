@@ -40,7 +40,9 @@ class MongoRepository[EntityT: Entity, ModelT: MongoBaseModel]:
         query: QueryDTO | None = None,
         sort: Sort | None = None,
     ) -> Page[EntityT]:
-        mongo_filter = compile_filter(query, allowed_fields=self.filter_whitelist)
+        mongo_filter = (
+            compile_filter(query, allowed_fields=self.filter_whitelist) if query is not None else {}
+        )
         mongo_sort = compile_sort(sort, allowed_fields=self.filter_whitelist)
 
         page = await paginate(

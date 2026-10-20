@@ -15,7 +15,7 @@ class OutboxMessageOrm(Base):
     type_: Mapped[Str255]
     occurred_on: Mapped[DatatimeTz]
     payload: Mapped[dict[str, Any]] = mapped_column(JSONB)
-    meta: dict[str, Any] = mapped_column(JSONB, default=dict)
+    meta: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     attempts: Mapped[int]
 
     available_at: Mapped[DatatimeTz]
