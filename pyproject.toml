@@ -33,6 +33,9 @@ ai = [
 mongo = [
     "pymongo>=4.18.2",
 ]
+s3 = [
+    "aiobotocore>=3.9.2",
+]
 
 [dependency-groups]
 dev = [
