@@ -6,6 +6,9 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 include = ["ddf", "ddf.*"]
 
+[tool.setuptools.package-data]
+"ddf.ratelimit.redis" = ["scripts/*.lua"]
+
 [project]
 name = "py-ddd-framework"
 version = "0.1.0"

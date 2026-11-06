@@ -15,12 +15,12 @@ class ScriptCall:
 type Strategy = Callable[..., ScriptCall]
 type PrepareScriptCallFunc[PolicyT: BaseRateLimitPolicy] = Callable[[PolicyT, int], ScriptCall]
 
-_registry: dict[type[...], Strategy] = {}
+_registry: dict[type[BaseRateLimitPolicy], Strategy] = {}
 
 
-def register_strategy[PolicyT](
+def register_strategy[PolicyT: BaseRateLimitPolicy](
     policy_type: type[PolicyT],
-) -> Callable[PrepareScriptCallFunc[PolicyT], PrepareScriptCallFunc[PolicyT]]:
+) -> Callable[[PrepareScriptCallFunc[PolicyT]], PrepareScriptCallFunc[PolicyT]]:
     """Регистрирует стратегию реализации алгоритма ``RateLimiter``."""
 
     def decorator(func: PrepareScriptCallFunc[PolicyT]) -> PrepareScriptCallFunc[PolicyT]:

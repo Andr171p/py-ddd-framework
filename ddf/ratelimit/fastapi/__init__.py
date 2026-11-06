@@ -42,7 +42,7 @@ def client_ip(request: Request) -> str:
     if request.client is None:
         raise RuntimeError("Client address is unavailable")
 
-    Return request.client.host
+    return request.client.host
 
 
 app.add_middleware(
@@ -75,7 +75,7 @@ from ddf.ratelimit.redis import RedisRateLimiter
 async def lifespan(app: FastAPI):
     redis = Redis.from_url("redis://localhost:6379")
 
-    app.state.rate_limiter = RedisRateLimiter(redis)
+    app.state.rate_limiter = RedisRateLimiter(redis, prefix="ratelimit")
 
     try:
         yield

@@ -25,7 +25,7 @@ def build_rate_limit_key(name: str, identity: str) -> str:
     if not isinstance(identity, str) or not identity:
         raise ValueError("identity must be a non-empty string")
 
-    return f"{name}:{len(identity)}:{identity}"
+    return f"{len(name)}:{name}:{len(identity)}:{identity}"
 
 
 def rejection_headers(result: RateLimitResult) -> dict[str, str]:
