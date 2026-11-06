@@ -27,6 +27,12 @@ class RedisCache[T]:
 
         await self.redis.set(key, raw, ex=effective_ttl)
 
+    async def pop(self, key: str) -> T | None:
+        if (raw := await self.redis.getdel(key)) is None:
+            return None
+
+        return self.serializer.loads(raw)
+
     async def delete(self, key: str) -> None:
         await self.redis.delete(key)
 

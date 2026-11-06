@@ -9,6 +9,7 @@ class InMemoryCache[T]:
         self.ttl = ttl
         self.cleanup_interval = cleanup_interval
         self._cleanup_task: asyncio.Task[None] | None = None
+        self._lock = asyncio.Lock()
 
     async def get(self, key: str) -> T | None:
         """Получение с ленивым удалением по TTL."""
@@ -31,6 +32,20 @@ class InMemoryCache[T]:
             expires = time.monotonic() + effective_ttl
 
         self.storage[key] = (value, expires)
+
+    async def pop(self, key: str) -> T | None:
+        """Атомарное получение значения с удалением."""
+
+        async with self._lock:
+            if key not in self.storage:
+                return None
+
+            value, expires = self.storage.pop(key)
+
+            if expires is not None and time.monotonic() >= expires:
+                return None
+
+            return value
 
     async def delete(self, key) -> None:
         if key not in self.storage:
