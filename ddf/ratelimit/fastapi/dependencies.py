@@ -14,7 +14,7 @@ def rate_limit(
     name: str,
     policy: RateLimitPolicy,
     *,
-    identity: Callable[..., str],
+    identity: Callable[..., str | Awaitable[str]],
     cost: int = 1,
 ) -> Callable[..., Awaitable[None]]:
     validate_rule(name, cost)
