@@ -7,7 +7,10 @@ from pydantic.alias_generators import to_camel
 
 
 class Event[T](BaseModel):
-    """Публичное событие для доставки realtime-клиентам."""
+    """Публичное событие для доставки realtime-клиентам.
+
+    Отвечает на вопрос: что произошло и какие данные доставляются клиенту?
+    """
 
     model_config = ConfigDict(alias_generator=to_camel, frozen=True)
 
@@ -19,6 +22,7 @@ class Event[T](BaseModel):
 
 
 class Subscription(BaseModel):
+    """На какой ресурс клиент хочет подписаться."""
     topic: str = Field(min_length=1, max_length=64)
     key: str = Field(min_length=1, max_length=128)
 

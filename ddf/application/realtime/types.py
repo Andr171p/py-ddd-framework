@@ -2,10 +2,13 @@ from typing import NewType
 
 from collections.abc import Awaitable, Callable
 
-from .messages import Subscription
+from .messages import Event, Subscription
 
+# Внутренний адрес группы соединений
 Room = NewType("Room", str)
 
 type RoomResolver = Callable[[Subscription], Awaitable[Room]]
 
-__all__ = ["Room", "RoomResolver"]
+type RealtimePublisher[T] = Callable[[Event[T], Room], Awaitable[None]]
+
+__all__ = ["RealtimePublisher", "Room", "RoomResolver"]

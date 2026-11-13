@@ -8,13 +8,13 @@ from uuid import UUID
 from fastapi import status
 
 from .connection import Connection
-from .messages import Event, Subscription
 from .exceptions import TooManySubscriptionsError
+from .messages import Event, Subscription
 from .types import Room
 
 
 class ConnectionManager:
-    def __init__(self, *, max_subscriptions: int = 64, max_message_bytes=65_536) -> None:
+    def __init__(self, *, max_subscriptions: int = 64, max_message_bytes: int = 65_536) -> None:
         if max_subscriptions < 1 or max_message_bytes < 1:
             raise ValueError("Limits must be positive")
 

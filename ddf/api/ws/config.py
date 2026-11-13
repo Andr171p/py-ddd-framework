@@ -3,13 +3,31 @@ from datetime import timedelta
 from pydantic import BaseModel, Field, PositiveFloat, PositiveInt
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from ddf.application.limits import ConcurrencyPolicy
 from ddf.application.realtime import OverflowPolicy
 from ddf.ratelimit import FixedWindowPolicy
 
 
-class WsSubscriptionConfig(BaseModel):
-    model_config = SettingsConfigDict(env_prefix="WS_SUBSCRIPTION_")
+class WsAdmissionConfig(BaseModel):
+    connect_limit: PositiveInt = Field(default=10, description="")
+    connect_window: timedelta = Field(default=timedelta(minutes=1), gt=timedelta(0))
 
+    max_concurrent_connections: PositiveInt = Field(
+        default=5,
+        description="Максимальное кол-во параллельных соединений",
+    )
+    lease_ttl: timedelta = Field(default=timedelta(seconds=60), gt=timedelta(seconds=3))
+
+    @property
+    def connect_rate_policy(self) -> FixedWindowPolicy:
+        return FixedWindowPolicy(limit=self.connect_limit, window=self.connect_window)
+
+    @property
+    def concurrency_policy(self) -> ConcurrencyPolicy:
+        return ConcurrencyPolicy(limit=self.max_concurrent_connections, lease_ttl=self.lease_ttl)
+
+
+class WsSubscriptionConfig(BaseModel):
     max_consecutive_invalid_commands: PositiveInt = Field(
         default=5,
         description="Максимальное количество последовательных недопустимых команд",
@@ -45,4 +63,5 @@ class WsConfig(BaseSettings):
     send_timeout: PositiveFloat = Field(default=15.0, description="Таймаут отправки сообщения")
     close_timeout: PositiveFloat = Field(default=1.0, description="Таймаут для закрытия соединения")
 
+    admission: WsAdmissionConfig = Field(default_factory=WsAdmissionConfig)
     subscription: WsSubscriptionConfig = Field(default_factory=WsSubscriptionConfig)

@@ -6,19 +6,28 @@ from collections.abc import Awaitable, Callable, Iterable
 from fastapi import HTTPException, WebSocket, WebSocketDisconnect, WebSocketException, status
 from starlette.websockets import WebSocketState
 
-from ddf.application.realtime import Connection, ConnectionManager, Room
+from ddf.application.realtime import Connection, Room
 
 from .config import WsConfig
+from .dependencies import WsAdmission, get_ws_container
 
 logger = logging.getLogger(__name__)
 
 type ConnectionHandler = Callable[[Connection], Awaitable[None]]
 
 
-async def _receive(connection: Connection, handler: ConnectionHandler) -> None:
+async def _receive(connection: Connection, handler: ConnectionHandler) -> int | None:
     """Запускает обработчик соединения, нормализует ожидаемый disconnect."""
-    with contextlib.suppress(WebSocketDisconnect, OSError):
+
+    try:
         await handler(connection)
+    except (WebSocketDisconnect, OSError):
+        return None
+
+    if connection.websocket.client_state == WebSocketState.DISCONNECTED:
+        return None
+
+    return status.WS_1000_NORMAL_CLOSURE
 
 
 async def _send(connection: Connection, timeout: float) -> int | None:
@@ -36,22 +45,31 @@ async def _send(connection: Connection, timeout: float) -> int | None:
     return status.WS_1011_INTERNAL_ERROR
 
 
-async def _run(connection: Connection, handler: ConnectionHandler, config: WsConfig) -> int | None:
+async def _run(
+    connection: Connection,
+    handler: ConnectionHandler,
+    config: WsConfig,
+    admission: WsAdmission,
+) -> int | None:
     tasks = (
         asyncio.create_task(_receive(connection, handler), name=f"ws-recv:{connection.id}"),
         asyncio.create_task(_send(connection, config.send_timeout), name=f"ws-send:{connection.id}"),
         asyncio.create_task(connection.wait_close(), name=f"ws-close:{connection.id}"),
+        asyncio.create_task(admission.lost.wait(), name=f"ws-lease:{connection.id}"),
     )
 
-    receiver, sender, closing = tasks
+    receiver, sender, closing, lease_lost = tasks
 
     try:
         done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
-        # Исключения име.т приоритет наж штатными завершениями
-        for task in done:
+        # Исключения имеет приоритет наж штатными завершениями
+        for task in tasks:
             if not task.cancelled() and (error := task.exception()):
                 raise error
+
+        if lease_lost in done:
+            return status.WS_1013_TRY_AGAIN_LATER
 
         if receiver in done and not receiver.cancelled():
             return None
@@ -87,34 +105,36 @@ async def _close(websocket: WebSocket, code: int | None, reason: str, timeout: f
 
 async def serve_websocket(
     websocket: WebSocket,
-    config: WsConfig,
-    manager: ConnectionManager,
     handler: ConnectionHandler,
     *,
+    admission: WsAdmission,
     initial_rooms: Iterable[Room] = (),
 ) -> None:
     """Обслуживает одно аутентифицированное WebSocket-соединение."""
 
-    if manager.closing:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    container = get_ws_container(websocket)
+    config, connection_manager = container.config, container.connection_manager
 
-    await websocket.accept()
+    if connection_manager.closing or admission.lost.is_set():
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
 
     close_code: int | None = status.WS_1001_GOING_AWAY
     close_reason = ""
 
     try:
-        if manager.closing:
+        await websocket.accept()
+
+        if connection_manager.closing or admission.lost.is_set():
             close_code = status.WS_1013_TRY_AGAIN_LATER
             return
 
         connection = Connection(websocket, queue_size=config.queue_size, overflow=config.overflow)
 
-        with manager.connect(connection):
+        with connection_manager.connect(connection):
             for room in initial_rooms:
-                manager.join(connection, room)
+                connection_manager.join(connection, room)
 
-            close_code = await _run(connection, handler, config)
+            close_code = await _run(connection, handler, config, admission)
     except WebSocketException as exc:
         close_code = exc.code
         close_reason = exc.reason or ""
@@ -126,4 +146,4 @@ async def serve_websocket(
         await _close(websocket, close_code, close_reason, config.close_timeout)
 
 
-__all__ = ["serve_websocket"]
+__all__ = ["ConnectionHandler", "serve_websocket"]

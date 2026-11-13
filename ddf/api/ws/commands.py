@@ -16,12 +16,13 @@ from ddf.application.realtime import (
 from ddf.application.realtime.exceptions import SubscriptionDeniedError, TooManySubscriptionsError
 
 from .config import WsConfig
+from .dependencies import get_ws_container
 
 _command_adapter = TypeAdapter(SubscriptionCommand)
 
 
 def send_reply(connection: Connection, type: str, payload: object, reply_to: UUID | None = None) -> None:
-    """Отправляет ответ конкретному адресату или рассылает всем подписчикам."""
+    """Добавляет ответ в исходящую очередь соединения."""
 
     reply = Reply(type=type, reply_to=reply_to, payload=payload)
     connection.offer(reply.model_dump_json(by_alias=True, exclude_none=True))
@@ -72,14 +73,11 @@ async def dispatch_subscription_command(
     send_reply(connection, "subscription.subscribed", command.payload, command.id)
 
 
-async def handle_subscription_commands(
-    connection: Connection,
-    connection_manager: ConnectionManager,
-    *,
-    resolve_room: RoomResolver,
-    config: WsConfig,
-) -> None:
+async def handle_subscription_commands(connection: Connection, *, resolve_room: RoomResolver) -> None:
     """Принимает и обрабатывает команды подписки вплоть до отключения."""
+
+    container = get_ws_container(connection.websocket)
+    config, connection_manager = container.config, container.connection_manager
 
     invalid = 0
 
