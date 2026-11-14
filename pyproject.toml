@@ -44,7 +44,7 @@ mongo = [
     "pymongo>=4.18.2",
 ]
 s3 = [
-    "aiobotocore>=3.9.2",
+    "aiobotocore>=3.10.0",
 ]
 
 [dependency-groups]
