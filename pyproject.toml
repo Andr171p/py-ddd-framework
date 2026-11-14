@@ -26,6 +26,7 @@ dependencies = [
 [project.optional-dependencies]
 sqlalchemy = [
     "asyncpg>=0.31.0",
+    "greenlet>=3.2.0",
     "sqlalchemy>=2.0.54",
 ]
 rabbit = [
@@ -57,6 +58,7 @@ docs = [
 test = [
     "fakeredis[lua]>=2.40.0",
     "httpx>=0.28.0",
+    "hypothesis>=6.150.0",
     "locust>=2.37.0",
     "pytest>=9.2.0",
     "pytest-asyncio>=1.0.0",
@@ -74,6 +76,8 @@ markers = [
     "e2e: multi-instance Docker Compose scenarios",
     "destructive: e2e that stop/kill instances and restore the stack",
     "load: locust load scenarios (manual / nightly)",
+    "security: hostile payloads, injection, and access checks",
+    "slow: broad inputs or multi-second budgets",
 ]
 
 # ---------------------------------------------------------------------------

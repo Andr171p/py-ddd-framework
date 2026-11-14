@@ -4,13 +4,16 @@ COMPOSE_E2E = tests/e2e/docker/compose.yaml
 export TESTCONTAINERS_RYUK_DISABLED ?= true
 export NO_PROXY ?= 127.0.0.1,localhost
 
-.PHONY: test-unit test-integration test-integration-realtime test-e2e test-e2e-rabbit test-load test-load-headless e2e-up e2e-down load-up load-down
+.PHONY: test-unit test-integration test-integration-realtime test-e2e test-e2e-rabbit test-e2e-dsl e2e-dsl-up e2e-dsl-down test-load test-load-headless test-load-dsl e2e-up e2e-down load-up load-down
+
+DSL_COMPOSE = tests/e2e/dsl/docker/compose.yaml
+UV_DSL = $(UV_TEST) --extra sqlalchemy --extra mongo
 
 test-unit:
 	$(UV_TEST) pytest tests/unit -q
 
 test-integration:
-	$(UV_TEST) --extra sqlalchemy pytest tests/integration -v --ignore=tests/integration/realtime
+	$(UV_DSL) pytest tests/integration -v --ignore=tests/integration/realtime
 
 test-integration-realtime:
 	$(UV_REALTIME) pytest tests/integration/realtime -v
@@ -22,10 +25,10 @@ e2e-down:
 	docker compose -f $(COMPOSE_E2E) down -v
 
 test-e2e:
-	$(UV_REALTIME) pytest tests/e2e -v
+	$(UV_REALTIME) pytest tests/e2e -v --ignore=tests/e2e/dsl
 
 test-e2e-rabbit:
-	REALTIME_BACKEND=rabbit $(UV_REALTIME) pytest tests/e2e -v
+	REALTIME_BACKEND=rabbit $(UV_REALTIME) pytest tests/e2e -v --ignore=tests/e2e/dsl
 
 load-up:
 	REALTIME_BACKEND=redis docker compose -f tests/load/compose.yaml up -d --build --wait
@@ -42,3 +45,17 @@ test-load-headless: load-up
 	$(UV_TEST) locust -f tests/load/locustfile.py --host http://127.0.0.1:18001 \
 		--headless -u 100 -r 10 -t 5m --html reports/load-baseline.html
 	$(MAKE) load-down
+
+e2e-dsl-up:
+	docker compose -f $(DSL_COMPOSE) up -d --build --wait
+
+e2e-dsl-down:
+	docker compose -f $(DSL_COMPOSE) down -v
+
+test-e2e-dsl:
+	$(UV_TEST) --extra sqlalchemy pytest tests/e2e/dsl -v
+
+test-load-dsl: e2e-dsl-up
+	$(UV_TEST) locust -f tests/load/dsl/locustfile.py --host http://127.0.0.1:18121 \
+		--headless -u 15 -r 5 -t 20s --only-summary
+	$(MAKE) e2e-dsl-down

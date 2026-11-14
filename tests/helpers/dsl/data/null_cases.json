@@ -1,0 +1,14 @@
+[
+  {
+    "name": "assignee-is-null",
+    "expression": {"field": "assigneeName", "op": "$isNull"},
+    "postgres": ["jam", "monitor"],
+    "mongo": ["jam"]
+  },
+  {
+    "name": "assignee-ne-ada",
+    "expression": {"field": "assigneeName", "op": "$ne", "value": "Ada"},
+    "postgres": ["bob", "dotted", "percent"],
+    "mongo": ["bob", "dotted", "jam", "monitor", "percent"]
+  }
+]

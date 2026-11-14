@@ -27,3 +27,19 @@ make e2e-down
 
 Destructive-тесты (`resilience/`) помечены `@pytest.mark.destructive` и
 восстанавливают инстансы только после себя, а не перед каждым тестом.
+
+## DSL
+
+Отдельный стенд, не входит в `make test-e2e`:
+
+```text
+tests/e2e/dsl/docker/compose.yaml
+tests/e2e/dsl/docker/postgres.docker-compose.yml
+tests/e2e/dsl/docker/api.docker-compose.yml
+```
+
+```sh
+make e2e-dsl-up
+make test-e2e-dsl
+make e2e-dsl-down
+```
