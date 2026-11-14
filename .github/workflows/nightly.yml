@@ -21,7 +21,7 @@ env:
 jobs:
   e2e:
     name: Nightly E2E
-    uses: ./.github/workflows/e2e.yml
+    uses: $/.github/workflows/e2e.yml
     permissions:
       contents: read
 

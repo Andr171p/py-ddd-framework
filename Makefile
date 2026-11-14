@@ -19,7 +19,7 @@ typecheck:
 	uv run --group dev mypy ddf
 
 audit:
-	uv export --frozen --all-extras --all-groups --no-emit-project --no-hashes -o requirements-audit.txt
+	uv export --frozen --all-extras --all-groups --no-emit-project -o requirements-audit.txt
 	uvx pip-audit --disable-pip --requirement requirements-audit.txt --progress-spinner off
 	uv run --no-project python -c "from pathlib import Path; Path('requirements-audit.txt').unlink(missing_ok=True)"
 
