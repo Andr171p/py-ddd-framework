@@ -1,10 +1,35 @@
-Run all tests, including the rate limiter's production Lua scripts:
+# Тесты DDF
+
+## Быстрые тесты без внешних сервисов
 
 ```sh
-uv run --group test --extra sqlalchemy pytest tests -v
+make test-unit
 ```
 
-The Lua tests use fakeredis and a Lua runtime, with controlled Redis time for
-window boundaries and refill checks. No Redis server is required. The `sqlalchemy`
-extra enables the DSL integration tests. Without the `test` group, Lua tests are
-skipped; without the `sqlalchemy` extra, DSL integration tests are skipped.
+## Интеграционные тесты
+
+```sh
+make test-integration
+make test-integration-realtime   # Docker + testcontainers
+```
+
+## E2E
+
+Сценарии по пакетам: `delivery/`, `limits/`, `resilience/`, `acceptance/`.
+
+```sh
+make e2e-up    # build образов один раз
+make test-e2e  # без --build
+make e2e-down
+```
+
+## Load (Locust)
+
+```sh
+make test-load
+make test-load-headless
+```
+
+Подробности: `tests/apps/realtime_tickets/README.md`,
+`tests/integration/realtime/README.md`, `tests/e2e/README.md`,
+`tests/load/README.md`, план — `tests/TEST_PLAN.md`.
