@@ -4,6 +4,6 @@ import uuid
 
 from pydantic import UUID7, Field
 
-type UUIDPK = Annotated[UUID7, Field(default_factory=uuid.uuid7)]  # type: ignore
+type UUIDPK = Annotated[UUID7, Field(default_factory=uuid.uuid7)]
 
 __all__ = ["UUIDPK"]

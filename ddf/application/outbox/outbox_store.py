@@ -6,7 +6,6 @@ from .message import OutboxMessage
 
 
 class OutboxStore(Protocol):
-
     async def save_all(self, messages: Sequence[OutboxMessage]) -> None:
         """Сохраняет новые сообщения или изменения состояния существующих в текущей транзакции."""
 

@@ -38,11 +38,7 @@ def _parse_audience(value: object) -> tuple[str, ...]:
     if isinstance(value, str) and value:
         return (value,)
 
-    if (
-        isinstance(value, list)
-        and value
-        and all(isinstance(item, str) and item for item in value)
-    ):
+    if isinstance(value, list) and value and all(isinstance(item, str) and item for item in value):
         return tuple(value)
 
     raise InvalidTokenError("Invalid audience claim")
@@ -55,11 +51,7 @@ def _validate_numeric_dates(claims: dict) -> None:
 
         value = claims[name]
 
-        if (
-            isinstance(value, bool)
-            or not isinstance(value, (int, float))
-            or not math.isfinite(value)
-        ):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
             raise InvalidTokenError(f"Invalid {name} claim")
 
 

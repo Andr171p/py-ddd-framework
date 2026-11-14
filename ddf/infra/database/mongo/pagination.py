@@ -20,11 +20,7 @@ _CURSOR_JSON_OPTIONS = json_util.JSONOptions(uuid_representation=UuidRepresentat
 def _encode_cursor(document: Mapping[str, Any], *, sort: list[tuple[str, int]]) -> str:
     payload = {
         "v": 1,
-        "values": [
-            value
-            for field, _ in sort
-            if (value := document.get(field)) is not None
-        ],
+        "values": [value for field, _ in sort if (value := document.get(field)) is not None],
     }
 
     raw = json_util.dumps(payload, separators=(",", ":"), json_options=_CURSOR_JSON_OPTIONS).encode()
@@ -98,13 +94,7 @@ async def _paginate_by_offset[ModelT: MongoBaseModel](
     pagination: OffsetPagination,
 ) -> Page[ModelT]:
     total = await collection.count_documents(filter_)
-    cursor = (
-        collection
-        .find(filter_)
-        .sort(sort)
-        .skip(pagination.offset)
-        .limit(pagination.size)
-    )
+    cursor = collection.find(filter_).sort(sort).skip(pagination.offset).limit(pagination.size)
 
     items = [model.model_validate(doc) async for doc in cursor]
     return create_page(pagination, items, total=total)
@@ -124,17 +114,12 @@ async def _paginate_by_cursor[ModelT: MongoBaseModel](
         cursor_filter = _build_cursor_filter(cursor=pagination.cursor, sort=sort)
         effective_filter = _merge_filters(filter_, cursor_filter)
 
-    cursor = (
-        collection
-        .find(effective_filter)
-        .sort(sort)
-        .limit(pagination.size + 1)
-    )
+    cursor = collection.find(effective_filter).sort(sort).limit(pagination.size + 1)
 
     docs = [doc async for doc in cursor]
 
     has_next = len(docs) > pagination.size
-    docs = docs[:pagination.size]
+    docs = docs[: pagination.size]
     next_cursor: str | None = None
 
     if has_next and docs:

@@ -3,13 +3,12 @@ from redis.asyncio import Redis
 from .serializers import Serializer
 
 
+def _as_bytes(raw: bytes | str) -> bytes:
+    return raw.encode() if isinstance(raw, str) else raw
+
+
 class RedisCache[T]:
-    def __init__(
-            self,
-            redis: Redis,
-            serializer: Serializer[T],
-            ttl: int | None = None
-    ) -> None:
+    def __init__(self, redis: Redis, serializer: Serializer[T], ttl: int | None = None) -> None:
         self.redis = redis
         self.serializer = serializer
         self.ttl = ttl
@@ -18,7 +17,7 @@ class RedisCache[T]:
         if (raw := await self.redis.get(key)) is None:
             return None
 
-        return self.serializer.loads(raw)
+        return self.serializer.loads(_as_bytes(raw))
 
     async def set(self, key: str, value: T, ttl: int | None = None) -> None:
         raw = self.serializer.dumps(value)
@@ -31,7 +30,7 @@ class RedisCache[T]:
         if (raw := await self.redis.getdel(key)) is None:
             return None
 
-        return self.serializer.loads(raw)
+        return self.serializer.loads(_as_bytes(raw))
 
     async def delete(self, key: str) -> None:
         await self.redis.delete(key)

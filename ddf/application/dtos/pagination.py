@@ -112,7 +112,7 @@ def create_page[T: Any](pagination: Pagination, items: Sequence[T], *args: Any, 
                 next_cursor=next_cursor,
                 has_next=has_next,
                 size=pagination.size,
-            )
+            ),
         )
 
     raise ValueError(f"Unsupported pagination type: {type(pagination)}.")
@@ -149,7 +149,7 @@ def get_pagination(
 ) -> Pagination:
     match pagination_type:
         case "offset":
-            return OffsetPagination(page=page, size=size)
+            return OffsetPagination(page=1 if page is None else page, size=size)
         case "cursor":
             return CursorPagination(cursor=cursor, size=size)
 

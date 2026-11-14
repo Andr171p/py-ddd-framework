@@ -4,10 +4,29 @@ COMPOSE_E2E = tests/e2e/docker/compose.yaml
 export TESTCONTAINERS_RYUK_DISABLED ?= true
 export NO_PROXY ?= 127.0.0.1,localhost
 
-.PHONY: test-unit test-integration test-integration-realtime test-e2e test-e2e-rabbit test-e2e-dsl e2e-dsl-up e2e-dsl-down test-load test-load-headless test-load-dsl e2e-up e2e-down load-up load-down
+.PHONY: lint format-check typecheck audit package-smoke test-unit test-integration test-integration-realtime test-e2e test-e2e-smoke test-e2e-rabbit test-e2e-dsl e2e-dsl-up e2e-dsl-down test-load test-load-headless test-load-dsl e2e-up e2e-down load-up load-down
 
 DSL_COMPOSE = tests/e2e/dsl/docker/compose.yaml
 UV_DSL = $(UV_TEST) --extra sqlalchemy --extra mongo
+
+lint:
+	uv run --group dev ruff check .
+
+format-check:
+	uv run --group dev ruff format --check .
+
+typecheck:
+	uv run --group dev mypy ddf
+
+audit:
+	uv export --frozen --all-extras --all-groups --no-emit-project -o requirements-audit.txt
+	uvx pip-audit --disable-pip --requirement requirements-audit.txt --progress-spinner off
+	uv run --no-project python -c "from pathlib import Path; Path('requirements-audit.txt').unlink(missing_ok=True)"
+
+package-smoke:
+	uv build
+	uvx twine check dist/*
+	uv run --no-project --python 3.14 python scripts/package_smoke.py
 
 test-unit:
 	$(UV_TEST) pytest tests/unit -q
@@ -26,6 +45,9 @@ e2e-down:
 
 test-e2e:
 	$(UV_REALTIME) pytest tests/e2e -v --ignore=tests/e2e/dsl
+
+test-e2e-smoke:
+	$(UV_REALTIME) pytest tests/e2e -v --ignore=tests/e2e/dsl -m "not destructive"
 
 test-e2e-rabbit:
 	REALTIME_BACKEND=rabbit $(UV_REALTIME) pytest tests/e2e -v --ignore=tests/e2e/dsl

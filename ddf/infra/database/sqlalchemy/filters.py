@@ -100,12 +100,10 @@ def _compile_condition[ModelT: Base](  # noqa: C901, PLR0911
             return column <= condition.value
 
         case "$in":
-            _ensure_list_value(condition)
-            return column.in_(condition.value)
+            return column.in_(_ensure_list_value(condition))
 
         case "$nin":
-            _ensure_list_value(condition)
-            return column.not_in(condition.value)
+            return column.not_in(_ensure_list_value(condition))
 
         case "$like":
             return column.like(_ensure_str_value(condition))

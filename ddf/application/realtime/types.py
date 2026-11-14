@@ -1,4 +1,4 @@
-from typing import NewType
+from typing import NewType, Protocol
 
 from collections.abc import Awaitable, Callable
 
@@ -9,6 +9,9 @@ Room = NewType("Room", str)
 
 type RoomResolver = Callable[[Subscription], Awaitable[Room]]
 
-type RealtimePublisher[T] = Callable[[Event[T], Room], Awaitable[None]]
+
+class RealtimePublisher[T](Protocol):
+    async def __call__(self, event: Event[T], *, to: Room) -> None: ...
+
 
 __all__ = ["RealtimePublisher", "Room", "RoomResolver"]

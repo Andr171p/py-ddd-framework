@@ -1,0 +1,60 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  UV_LOCKED: "1"
+  TESTCONTAINERS_RYUK_DISABLED: "true"
+  NO_PROXY: 127.0.0.1,localhost
+
+jobs:
+  realtime:
+    name: E2E Realtime
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - run: uv sync --locked --group test --extra redis --extra rabbit
+      - run: make e2e-up
+      - run: make test-e2e
+        env:
+          E2E_MANAGE_COMPOSE: "0"
+      - if: always()
+        run: make e2e-down
+
+  dsl:
+    name: E2E DSL
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - run: uv sync --locked --group test --extra sqlalchemy
+      - run: make test-e2e-dsl

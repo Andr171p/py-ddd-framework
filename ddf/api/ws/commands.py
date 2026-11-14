@@ -18,7 +18,7 @@ from ddf.application.realtime.exceptions import SubscriptionDeniedError, TooMany
 from .config import WsConfig
 from .dependencies import get_ws_container
 
-_command_adapter = TypeAdapter(SubscriptionCommand)
+_command_adapter: TypeAdapter[SubscriptionCommand] = TypeAdapter(SubscriptionCommand)
 
 
 def send_reply(connection: Connection, type: str, payload: object, reply_to: UUID | None = None) -> None:

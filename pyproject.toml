@@ -71,6 +71,10 @@ test = [
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 pythonpath = ["."]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+]
 markers = [
     "integration: requires Docker via testcontainers",
     "e2e: multi-instance Docker Compose scenarios",
@@ -78,6 +82,8 @@ markers = [
     "load: locust load scenarios (manual / nightly)",
     "security: hostile payloads, injection, and access checks",
     "slow: broad inputs or multi-second budgets",
+    "smoke: critical path safe to run on every pull request",
+    "anyio: async test executed by the anyio plugin",
 ]
 
 # ---------------------------------------------------------------------------
@@ -98,6 +104,7 @@ extend-exclude = [
     "**/.mypy_cache",
     "**/.ruff_cache",
     "**/.venv",
+    "**/*.md",
 ]
 
 [tool.ruff.lint]
@@ -219,15 +226,34 @@ docstring-code-format = true
 # ---------------------------------------------------------------------------
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
+files = ["ddf"]
+mypy_path = "."
+explicit_package_bases = true
+namespace_packages = true
+show_error_codes = true
+pretty = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_equality = true
 ignore_missing_imports = true
-
 exclude = [
-    "src/migration",
-    "src/migrations",
-    "__samples__",
-    ".venv",
+    "(^|/)\\.venv/",
+    "(^|/)__samples__/",
+    "(^|/)migrations/",
+    "(^|/)src/migration/",
+    "(^|/)src/migrations/",
 ]
+
+# SQLAlchemy 2 does not ship a supported mypy plugin. Mapped columns and query
+# operators stay in the ORM adapters and are not a useful mypy gate.
+[[tool.mypy.overrides]]
+module = [
+    "ddf.infra.database.sqlalchemy",
+    "ddf.infra.database.sqlalchemy.*",
+]
+ignore_errors = true
 
 
 # ---------------------------------------------------------------------------

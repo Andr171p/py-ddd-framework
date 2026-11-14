@@ -8,16 +8,15 @@ from ddf.domain.models import Entity
 
 
 class Repository[EntityT: Entity](Protocol):
-
     async def create(self, entity: EntityT) -> EntityT: ...
 
     async def read(self, uid: UUID) -> EntityT | None: ...
 
     async def find(
-            self,
-            pagination: Pagination,
-            query: QueryDTO | None = None,
-            sort: Sort | None = None,
+        self,
+        pagination: Pagination,
+        query: QueryDTO | None = None,
+        sort: Sort | None = None,
     ) -> Page[EntityT]: ...
 
     async def update(self, entity: EntityT) -> None: ...

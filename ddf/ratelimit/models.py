@@ -22,7 +22,6 @@ class BaseRateLimitPolicy(BaseModel):
 
 
 class TokenBucketPolicy(BaseRateLimitPolicy):
-
     algorithm: Literal["token_bucket"] = "token_bucket"
 
     capacity: int = Field(gt=0)

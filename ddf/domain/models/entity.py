@@ -15,7 +15,7 @@ class Entity:
 
     _events: list[Event] = field(default_factory=list, init=False)
 
-    id: uuid.UUID = field(default_factory=uuid.uuid7)  # type: ignore
+    id: uuid.UUID = field(default_factory=uuid.uuid7)
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     deleted_at: datetime | None = None

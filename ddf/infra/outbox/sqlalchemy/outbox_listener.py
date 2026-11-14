@@ -15,16 +15,14 @@ class PostgresOutboxListener:
 
         self._notification = asyncio.Event()
 
-    # ruff: noqa: ARG002
     async def _on_notification(
         self,
-        connection: asyncpg.Connection,
-        pid: int,
-        channel: str,
-        payload: str,
+        _connection: asyncpg.Connection,
+        _pid: int,
+        _channel: str,
+        _payload: str,
     ) -> None:
         self._notification.set()
-    # ruff: noqa: END
 
     async def __aenter__(self) -> "PostgresOutboxListener":
         connection = await self._engine.connect()

@@ -3,7 +3,6 @@ from typing import Protocol, Self, runtime_checkable
 
 @runtime_checkable
 class UnitOfWork(Protocol):
-
     async def __aenter__(self) -> Self: ...
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None: ...

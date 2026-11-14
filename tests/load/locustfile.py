@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import time
+from contextlib import suppress
 from uuid import uuid4
 
 import websocket
@@ -12,6 +13,7 @@ from locust import HttpUser, between, events, task
 from locust.runners import MasterRunner
 
 ROOM_PREFIX = "org:acme:ticket:"
+HTTP_OK = 200
 
 
 class RealtimeUser(HttpUser):
@@ -80,7 +82,7 @@ class RealtimeUser(HttpUser):
             name="POST /realtime/publish",
             catch_response=True,
         ) as response:
-            if response.status_code != 200:
+            if response.status_code != HTTP_OK:
                 response.failure(f"status={response.status_code}")
                 return
             event_id = response.json()["eventId"]
@@ -113,20 +115,16 @@ class RealtimeUser(HttpUser):
     @task(1)
     def churn_reconnect(self) -> None:
         if self.ws is not None:
-            try:
+            with suppress(Exception):
                 self.ws.close()
-            except Exception:
-                pass
             self.ws = None
         self.subject = f"user-{uuid4().hex[:8]}"
         self._connect_and_subscribe()
 
     def on_stop(self) -> None:
         if self.ws is not None:
-            try:
+            with suppress(Exception):
                 self.ws.close()
-            except Exception:
-                pass
 
 
 @events.init.add_listener

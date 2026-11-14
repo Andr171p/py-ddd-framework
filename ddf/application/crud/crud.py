@@ -31,20 +31,20 @@ class Crud[
     DeleteOptionsT,
 ]:
     def __init__(
-            self,
-            repository: Repository[EntityT],
-            dispatcher: EventDispatcher,
-            to_response: Callable[[EntityT], ResponseT],
-            *,
-            # handlers:
-            create_handler: CreateHandler[EntityT, CreateT, CreateOptionsT] | None = None,
-            update_handler: UpdateHandler[EntityT, UpdateT, UpdateOptionsT] | None = None,
-            delete_handler: DeleteHandler[EntityT, DeleteOptionsT] | None = None,
-            # wrappers:
-            create_wrapper: CreateWrapper[EntityT, CreateT, CreateOptionsT] | None = None,
-            read_wrapper: ReadWrapper[EntityT, ReadOptionsT] | None = None,
-            update_wrapper: UpdateWrapper[EntityT, UpdateT, UpdateOptionsT] | None = None,
-            delete_wrapper: DeleteWrapper[EntityT, DeleteOptionsT] | None = None,
+        self,
+        repository: Repository[EntityT],
+        dispatcher: EventDispatcher,
+        to_response: Callable[[EntityT], ResponseT],
+        *,
+        # handlers:
+        create_handler: CreateHandler[EntityT, CreateT, CreateOptionsT] | None = None,
+        update_handler: UpdateHandler[EntityT, UpdateT, UpdateOptionsT] | None = None,
+        delete_handler: DeleteHandler[EntityT, DeleteOptionsT] | None = None,
+        # wrappers:
+        create_wrapper: CreateWrapper[EntityT, CreateT, CreateOptionsT] | None = None,
+        read_wrapper: ReadWrapper[EntityT, ReadOptionsT] | None = None,
+        update_wrapper: UpdateWrapper[EntityT, UpdateT, UpdateOptionsT] | None = None,
+        delete_wrapper: DeleteWrapper[EntityT, DeleteOptionsT] | None = None,
     ) -> None:
         self._repository = repository
         self._dispatcher = dispatcher
@@ -60,13 +60,16 @@ class Crud[
         self._delete_wrapper = delete_wrapper
 
     async def create(
-        self, dto: CreateT, options: CreateOptionsT | None = None,
+        self,
+        dto: CreateT,
+        options: CreateOptionsT | None = None,
     ) -> ResponseT:
-        if self._create_handler is None:
+        create_handler = self._create_handler
+        if create_handler is None:
             raise OperationNotAllowedError("Create operation is not supported.")
 
         async def _base_create(dto_: CreateT, options_: CreateOptionsT | None = None) -> EntityT:
-            entity_ = await self._create_handler(dto_, options_)
+            entity_ = await create_handler(dto_, options_)
 
             await self._repository.create(entity_)
             await self._dispatcher(entity_)
@@ -81,7 +84,7 @@ class Crud[
         return self._to_response(created)
 
     async def read(self, uid: UUID, options: ReadOptionsT | None = None) -> ResponseT:
-        entity = await get_or_raise_not_found(self._repository.read, uid, type[EntityT])
+        entity = await get_or_raise_not_found(self._repository.read, uid, Entity)
 
         async def _base_read(entity_: EntityT, options_: ReadOptionsT | None = None) -> EntityT:
             return entity_
@@ -94,18 +97,19 @@ class Crud[
 
         return self._to_response(read)
 
-    async def update(
-        self, uid: UUID, dto: UpdateT, options: UpdateOptionsT | None = None
-    ) -> ResponseT:
-        if self._update_handler is None:
+    async def update(self, uid: UUID, dto: UpdateT, options: UpdateOptionsT | None = None) -> ResponseT:
+        update_handler = self._update_handler
+        if update_handler is None:
             raise OperationNotAllowedError("Update operation is not supported.")
 
-        entity = await get_or_raise_not_found(self._repository.read, uid, type[EntityT])
+        entity = await get_or_raise_not_found(self._repository.read, uid, Entity)
 
         async def _base_update(
-                entity_: EntityT, dto_: UpdateT, options_: UpdateOptionsT | None = None,
+            entity_: EntityT,
+            dto_: UpdateT,
+            options_: UpdateOptionsT | None = None,
         ) -> EntityT:
-            handled = await self._update_handler(entity_, dto_, options_)
+            handled = await update_handler(entity_, dto_, options_)
 
             await self._repository.update(handled)
             await self._dispatcher(handled)
@@ -121,13 +125,14 @@ class Crud[
         return self._to_response(updated)
 
     async def delete(self, uid: UUID, options: DeleteOptionsT | None = None) -> None:
-        if self._delete_handler is None:
+        delete_handler = self._delete_handler
+        if delete_handler is None:
             raise OperationNotAllowedError("Delete operation is not supported.")
 
-        entity = await get_or_raise_not_found(self._repository.read, uid, type[EntityT])
+        entity = await get_or_raise_not_found(self._repository.read, uid, Entity)
 
         async def _base_delete(entity_: EntityT, options_: DeleteOptionsT | None) -> EntityT:
-            handled = await self._delete_handler(entity_, options_)
+            handled = await delete_handler(entity_, options_)
 
             await self._repository.update(handled)
             await self._dispatcher(handled)

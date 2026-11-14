@@ -32,13 +32,13 @@ def exponential_retry_policy(attempt: int) -> timedelta:
 
 class OutboxProcessor:
     def __init__(
-            self,
-            uow: UnitOfWork,
-            outbox_store: OutboxStore,
-            publisher: EventPublisher,
-            *,
-            config: OutboxConfig,
-            retry_policy: RetryPolicy = exponential_retry_policy,
+        self,
+        uow: UnitOfWork,
+        outbox_store: OutboxStore,
+        publisher: EventPublisher,
+        *,
+        config: OutboxConfig,
+        retry_policy: RetryPolicy = exponential_retry_policy,
     ) -> None:
         self._uow = uow
         self._outbox_store = outbox_store
@@ -67,9 +67,7 @@ class OutboxProcessor:
                 )
 
         semaphore = (
-            asyncio.Semaphore(self._config.max_concurrency)
-            if self._config.concurrency_enable
-            else None
+            asyncio.Semaphore(self._config.max_concurrency) if self._config.concurrency_enable else None
         )
 
         async def _process_one(message: OutboxMessage) -> None:

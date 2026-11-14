@@ -16,7 +16,6 @@ wait NOTIFY
 process()
 """
 
-
 import asyncio
 import logging
 

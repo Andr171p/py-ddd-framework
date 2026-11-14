@@ -27,7 +27,6 @@ class SqlAlchemyRepository[EntityT: Entity, ModelT: Base]:
         self._session = session
 
     async def create(self, entity: EntityT) -> EntityT:
-
         try:
             model = self.data_mapper.to_model(entity)
             self._session.add(model)
@@ -51,10 +50,10 @@ class SqlAlchemyRepository[EntityT: Entity, ModelT: Base]:
         return None if model is None else self.data_mapper.from_model(model)
 
     async def find(
-            self,
-            pagination: Pagination,
-            query: QueryDTO | None = None,
-            sort: Sort | None = None,
+        self,
+        pagination: Pagination,
+        query: QueryDTO | None = None,
+        sort: Sort | None = None,
     ) -> Page[EntityT]:
         stmt = select(self.model)
 
@@ -82,9 +81,9 @@ class SqlAlchemyRepository[EntityT: Entity, ModelT: Base]:
 
     async def exists(self, uid: UUID) -> bool:
         stmt = select(exists()).where(self.model.id == uid)
-        return await self._session.scalar(stmt)
+        return bool(await self._session.scalar(stmt))
 
     async def get_by_ids(self, ids: list[UUID]) -> tuple[EntityT, ...]:
         stmt = select(self.model).where(self.model.id.in_(ids))
         results = await self._session.execute(stmt)
-        return [self.data_mapper.from_model(model) for model in results.scalars().all()]
+        return tuple(self.data_mapper.from_model(model) for model in results.scalars().all())

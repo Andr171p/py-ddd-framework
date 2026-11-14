@@ -83,12 +83,12 @@ def _compile_condition(condition: Condition, *, fields: Mapping[str, str]) -> di
         case "$lte":
             return {field: {"$lte": value}}
 
-        case "$in":
-            return {field: {"$in": list(value)}}
+        case "$in" | "$nin":
+            if not isinstance(value, list | tuple | set):
+                raise ValueError(f"Operator '{condition.op}' expects a list value.")
 
-        case "$nin":
-            return {
-                field: {"$nin": list(value)}}
+            operator = "$in" if condition.op == "$in" else "$nin"
+            return {field: {operator: list(value)}}
 
         case "$isNull":
             return {field: {"$type": 10}}

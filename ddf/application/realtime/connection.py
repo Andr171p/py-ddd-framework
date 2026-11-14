@@ -28,7 +28,7 @@ class Connection:
 
     def __init__(
         self,
-        websocket: WebSocket[...],
+        websocket: WebSocket,
         *,
         overflow: OverflowPolicy = OverflowPolicy.DISCONNECT,
         queue_size: int = 128,
@@ -131,7 +131,11 @@ class Connection:
         await self._stopping.wait()
         return self._close_code
 
-    async def write(self, *, send_timeout: float = 15.0,) -> None:
+    async def write(
+        self,
+        *,
+        send_timeout: float = 15.0,
+    ) -> None:
         """Воркер для отправки сообщений в канал (пробрасывает исключение наверх владельцу lifecycle)."""
 
         if send_timeout <= 0:

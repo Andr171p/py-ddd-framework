@@ -104,11 +104,11 @@ class S3Client:
             raise NotFoundError(f"Object with key {storage_key!r} not found") from None
 
     async def upload_stream(
-            self,
-            file_stream: AsyncReadable,
-            storage_key: str,
-            mime_type: str,
-            chunk_size: int = DEFAULT_MIN_CHUNK_SIZE,
+        self,
+        file_stream: AsyncReadable,
+        storage_key: str,
+        mime_type: str,
+        chunk_size: int = DEFAULT_MIN_CHUNK_SIZE,
     ) -> None:
         """Потоковая загрузка через Multipart upload."""
 
@@ -116,7 +116,6 @@ class S3Client:
             raise ValueError("chunk_size must be at least 5 MiB for S3 multipart upload.")
 
         async with self.get_client() as client:
-
             response = await client.create_multipart_upload(
                 Bucket=self._config.bucket,
                 Key=storage_key,
