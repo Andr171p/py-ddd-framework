@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ddf
+      POSTGRES_PASSWORD: dsl-e2e-secret
+      POSTGRES_DB: ddf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ddf -d ddf"]
+      interval: 2s
+      timeout: 5s
+      retries: 20

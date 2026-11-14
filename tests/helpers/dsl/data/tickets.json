@@ -1,0 +1,80 @@
+[
+  {
+    "id": "019d8a2e-7c31-7001-8001-000000000001",
+    "code": "ada",
+    "organizationId": "org-a",
+    "title": "Printer offline",
+    "status": "open",
+    "priority": 3,
+    "assigneeName": "Ada",
+    "urgent": false,
+    "dueAt": "2026-03-01T00:00:00Z"
+  },
+  {
+    "id": "019d8a2e-7c31-7002-8002-000000000002",
+    "code": "jam",
+    "organizationId": "org-a",
+    "title": "Paper jam",
+    "status": "pending",
+    "priority": 2,
+    "assigneeName": null,
+    "urgent": false,
+    "dueAt": "2026-02-01T00:00:00Z"
+  },
+  {
+    "id": "019d8a2e-7c31-7003-8003-000000000003",
+    "code": "bob",
+    "organizationId": "org-b",
+    "title": "PRINTER fixed",
+    "status": "closed",
+    "priority": 1,
+    "assigneeName": "Bob",
+    "urgent": true,
+    "dueAt": "2026-01-15T05:30:00Z"
+  },
+  {
+    "id": "019d8a2e-7c31-7004-8004-000000000004",
+    "code": "monitor",
+    "organizationId": "org-b",
+    "title": "New monitor",
+    "status": "open",
+    "priority": 2,
+    "assigneeName": null,
+    "urgent": false,
+    "dueAt": null,
+    "omit": ["assigneeName"]
+  },
+  {
+    "id": "019d8a2e-7c31-7005-8005-000000000005",
+    "code": "percent",
+    "organizationId": "org-a",
+    "title": "100%_done",
+    "status": "open",
+    "priority": 5,
+    "assigneeName": "Иван",
+    "urgent": true,
+    "dueAt": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": "019d8a2e-7c31-7006-8006-000000000006",
+    "code": "dotted",
+    "organizationId": "org-b",
+    "title": "a.b+c*(d)",
+    "status": "pending",
+    "priority": 4,
+    "assigneeName": "Cy",
+    "urgent": false,
+    "dueAt": "2026-04-01T00:00:00Z"
+  },
+  {
+    "id": "019d8a2e-7c31-7007-8007-000000000007",
+    "code": "quote",
+    "organizationId": "org-a",
+    "title": "' OR 1=1 --",
+    "status": "open",
+    "priority": 3,
+    "assigneeName": "Ada",
+    "urgent": false,
+    "dueAt": "2026-05-01T00:00:00Z"
+  }
+]

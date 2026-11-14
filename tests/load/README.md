@@ -15,3 +15,9 @@ UI: **http://127.0.0.1:8089/** (не через proxy).
 `Starting web interface at ...`.
 
 Host нагрузки: `http://127.0.0.1:18001` (ws-a).
+
+DSL — отдельный locustfile и стенд `tests/e2e/dsl/docker/`:
+
+```sh
+make test-load-dsl
+```

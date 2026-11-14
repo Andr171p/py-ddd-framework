@@ -62,20 +62,20 @@ GET /items?sort=-createdAt
 
 ### Операторы сравнения
 
-| Оператор | Назначение | Пример |
-|---|---|---|
-| `$eq` | равно | `priority = 3` |
-| `$ne` | не равно | `status != "closed"` |
-| `$gt` | больше | `priority > 3` |
-| `$gte` | больше или равно | `priority >= 3` |
-| `$lt` | меньше | `priority < 3` |
-| `$lte` | меньше или равно | `priority <= 3` |
-| `$in` | входит в список | `status IN (...)` |
-| `$nin` | не входит в список | `status NOT IN (...)` |
-| `$like` | SQL `LIKE` | `title LIKE "%printer%"` |
-| `$ilike` | регистронезависимый `LIKE` | `title ILIKE "%printer%"` |
-| `$isNull` | значение `NULL` | `deletedAt IS NULL` |
-| `$isNotNull` | значение не `NULL` | `deletedAt IS NOT NULL` |
+| Оператор     | Назначение                 | Пример                    |
+|--------------|----------------------------|---------------------------|
+| `$eq`        | равно                      | `priority = 3`            |
+| `$ne`        | не равно                   | `status != "closed"`      |
+| `$gt`        | больше                     | `priority > 3`            |
+| `$gte`       | больше или равно           | `priority >= 3`           |
+| `$lt`        | меньше                     | `priority < 3`            |
+| `$lte`       | меньше или равно           | `priority <= 3`           |
+| `$in`        | входит в список            | `status IN (...)`         |
+| `$nin`       | не входит в список         | `status NOT IN (...)`     |
+| `$like`      | SQL `LIKE`                 | `title LIKE "%printer%"`  |
+| `$ilike`     | регистронезависимый `LIKE` | `title ILIKE "%printer%"` |
+| `$isNull`    | значение `NULL`            | `deletedAt IS NULL`       |
+| `$isNotNull` | значение не `NULL`         | `deletedAt IS NOT NULL`   |
 
 Для `$in` и `$nin` значение должно быть списком:
 

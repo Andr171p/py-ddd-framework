@@ -1,0 +1,206 @@
+[
+  {
+    "name": "status-open",
+    "expression": {"field": "status", "op": "$eq", "value": "open"},
+    "codes": ["ada", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "status-not-closed",
+    "expression": {"field": "status", "op": "$ne", "value": "closed"},
+    "codes": ["ada", "dotted", "jam", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "priority-gt-2",
+    "expression": {"field": "priority", "op": "$gt", "value": 2},
+    "codes": ["ada", "dotted", "percent", "quote"]
+  },
+  {
+    "name": "priority-gte-2",
+    "expression": {"field": "priority", "op": "$gte", "value": 2},
+    "codes": ["ada", "dotted", "jam", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "priority-lt-2",
+    "expression": {"field": "priority", "op": "$lt", "value": 2},
+    "codes": ["bob"]
+  },
+  {
+    "name": "priority-lte-2",
+    "expression": {"field": "priority", "op": "$lte", "value": 2},
+    "codes": ["bob", "jam", "monitor"]
+  },
+  {
+    "name": "status-in",
+    "expression": {"field": "status", "op": "$in", "value": ["open", "pending"]},
+    "codes": ["ada", "dotted", "jam", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "status-not-in",
+    "expression": {"field": "status", "op": "$nin", "value": ["open", "pending"]},
+    "codes": ["bob"]
+  },
+  {
+    "name": "status-in-duplicates",
+    "expression": {"field": "status", "op": "$in", "value": ["open", "open", "pending"]},
+    "codes": ["ada", "dotted", "jam", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "status-in-empty",
+    "expression": {"field": "status", "op": "$in", "value": []},
+    "codes": []
+  },
+  {
+    "name": "status-not-in-empty",
+    "expression": {"field": "status", "op": "$nin", "value": []},
+    "codes": ["ada", "bob", "dotted", "jam", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "priority-in",
+    "expression": {"field": "priority", "op": "$in", "value": [2, 4]},
+    "codes": ["dotted", "jam", "monitor"]
+  },
+  {
+    "name": "title-like-jam",
+    "expression": {"field": "title", "op": "$like", "value": "%jam%"},
+    "codes": ["jam"]
+  },
+  {
+    "name": "title-like-printer-is-case-sensitive",
+    "expression": {"field": "title", "op": "$like", "value": "%printer%"},
+    "codes": []
+  },
+  {
+    "name": "title-ilike-printer",
+    "expression": {"field": "title", "op": "$ilike", "value": "%printer%"},
+    "codes": ["ada", "bob"]
+  },
+  {
+    "name": "title-like-literal-dot",
+    "expression": {"field": "title", "op": "$like", "value": "a.b%"},
+    "codes": ["dotted"]
+  },
+  {
+    "name": "title-like-dot-star-is-literal",
+    "expression": {"field": "title", "op": "$like", "value": ".*"},
+    "codes": []
+  },
+  {
+    "name": "title-like-literal-operators",
+    "expression": {"field": "title", "op": "$like", "value": "%c*(d)"},
+    "codes": ["dotted"]
+  },
+  {
+    "name": "title-like-single-char",
+    "expression": {"field": "title", "op": "$like", "value": "P_per jam"},
+    "codes": ["jam"]
+  },
+  {
+    "name": "title-like-percent-wildcard",
+    "expression": {"field": "title", "op": "$like", "value": "100%"},
+    "codes": ["percent"]
+  },
+  {
+    "name": "title-eq-quote",
+    "expression": {"field": "title", "op": "$eq", "value": "' OR 1=1 --"},
+    "codes": ["quote"]
+  },
+  {
+    "name": "title-eq-printer",
+    "expression": {"field": "title", "op": "$eq", "value": "Printer offline"},
+    "codes": ["ada"]
+  },
+  {
+    "name": "assignee-ada",
+    "expression": {"field": "assigneeName", "op": "$eq", "value": "Ada"},
+    "codes": ["ada", "quote"]
+  },
+  {
+    "name": "assignee-unicode",
+    "expression": {"field": "assigneeName", "op": "$eq", "value": "Иван"},
+    "codes": ["percent"]
+  },
+  {
+    "name": "assignee-eq-null",
+    "expression": {"field": "assigneeName", "op": "$eq", "value": null},
+    "codes": ["jam", "monitor"]
+  },
+  {
+    "name": "assignee-is-not-null",
+    "expression": {"field": "assigneeName", "op": "$isNotNull"},
+    "codes": ["ada", "bob", "dotted", "percent", "quote"]
+  },
+  {
+    "name": "urgent",
+    "expression": {"field": "urgent", "op": "$eq", "value": true},
+    "codes": ["bob", "percent"]
+  },
+  {
+    "name": "not-urgent",
+    "expression": {"field": "urgent", "op": "$eq", "value": false},
+    "codes": ["ada", "dotted", "jam", "monitor", "quote"]
+  },
+  {
+    "name": "open-and-priority-gte-3",
+    "expression": {
+      "op": "$and",
+      "filters": [
+        {"field": "status", "op": "$eq", "value": "open"},
+        {"field": "priority", "op": "$gte", "value": 3}
+      ]
+    },
+    "codes": ["ada", "percent", "quote"]
+  },
+  {
+    "name": "closed-or-priority-gt-4",
+    "expression": {
+      "op": "$or",
+      "filters": [
+        {"field": "status", "op": "$eq", "value": "closed"},
+        {"field": "priority", "op": "$gt", "value": 4}
+      ]
+    },
+    "codes": ["bob", "percent"]
+  },
+  {
+    "name": "single-group",
+    "expression": {
+      "op": "$and",
+      "filters": [{"field": "status", "op": "$eq", "value": "open"}]
+    },
+    "codes": ["ada", "monitor", "percent", "quote"]
+  },
+  {
+    "name": "not-open",
+    "expression": {"filter": {"field": "status", "op": "$eq", "value": "open"}},
+    "codes": ["bob", "dotted", "jam"]
+  },
+  {
+    "name": "not-open-or-pending",
+    "expression": {
+      "filter": {
+        "op": "$or",
+        "filters": [
+          {"field": "status", "op": "$eq", "value": "open"},
+          {"field": "status", "op": "$eq", "value": "pending"}
+        ]
+      }
+    },
+    "codes": ["bob"]
+  },
+  {
+    "name": "double-negation-closed",
+    "expression": {"filter": {"filter": {"field": "status", "op": "$eq", "value": "closed"}}},
+    "codes": ["bob"]
+  },
+  {
+    "name": "de-morgan",
+    "expression": {
+      "op": "$and",
+      "filters": [
+        {"filter": {"field": "status", "op": "$eq", "value": "open"}},
+        {"filter": {"field": "status", "op": "$eq", "value": "pending"}}
+      ]
+    },
+    "codes": ["bob"]
+  }
+]
