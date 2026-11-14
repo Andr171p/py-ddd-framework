@@ -1,0 +1,5 @@
+include:
+  - path: redis.docker-compose.yml
+  - path: rabbitmq.docker-compose.yml
+  - path: ws-a.docker-compose.yml
+  - path: ws-b.docker-compose.yml

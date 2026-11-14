@@ -1,9 +1,8 @@
-from typing import Annotated, TypedDict, cast
+from typing import Annotated, cast
 
 from dataclasses import dataclass
 
-from fastapi import Depends
-from starlette.requests import HTTPConnection
+from fastapi import Depends, WebSocket
 
 from ddf.api.ws.config import WsConfig
 from ddf.application.limits import ConcurrencyLimiter
@@ -19,12 +18,8 @@ class WsContainer:
     concurrency_limiter: ConcurrencyLimiter
 
 
-class WsState(TypedDict):
-    ws: WsContainer
-
-
-def get_ws_container(connection: HTTPConnection[WsState]) -> WsContainer:
-    return cast(WsContainer, connection.state["ws"])
+def get_ws_container(websocket: WebSocket) -> WsContainer:
+    return cast(WsContainer, websocket.state["ws"])
 
 
 Ws = Annotated[WsContainer, Depends(get_ws_container)]

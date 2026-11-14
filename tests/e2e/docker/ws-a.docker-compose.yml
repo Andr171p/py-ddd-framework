@@ -1,0 +1,27 @@
+services:
+  ws-a:
+    build:
+      context: ../../..
+      dockerfile: tests/e2e/Dockerfile
+    environment:
+      INSTANCE_NAME: a
+      REDIS_URL: redis://redis:6379/0
+      RABBIT_URL: amqp://guest:guest@rabbitmq:5672/
+      REALTIME_BACKEND: ${REALTIME_BACKEND:-redis}
+      WS_ADMISSION__CONNECT_LIMIT: "100"
+      WS_ADMISSION__MAX_CONCURRENT_CONNECTIONS: "2"
+      WS_ADMISSION__LEASE_TTL: "PT4S"
+      WS_SUBSCRIPTION__AUTHORIZATION_TIMEOUT: "3"
+    ports:
+      - "18001:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready')"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s

@@ -63,8 +63,8 @@ async def _run(
     try:
         done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
-        # Исключения имеет приоритет наж штатными завершениями
-        for task in tasks:
+        # Исключения имеют приоритет над штатными завершениями
+        for task in done:
             if not task.cancelled() and (error := task.exception()):
                 raise error
 
@@ -72,7 +72,7 @@ async def _run(
             return status.WS_1013_TRY_AGAIN_LATER
 
         if receiver in done and not receiver.cancelled():
-            return None
+            return receiver.result()
 
         for task in (closing, sender):
             if task in done and not task.cancelled():

@@ -8,6 +8,7 @@ include = ["ddf", "ddf.*"]
 
 [tool.setuptools.package-data]
 "ddf.ratelimit.redis" = ["scripts/*.lua"]
+"ddf.infra.limits.concurrency.redis" = ["scripts/*.lua"]
 
 [project]
 name = "py-ddd-framework"
@@ -30,6 +31,10 @@ sqlalchemy = [
 rabbit = [
     "faststream[rabbit]>=0.7.5",
 ]
+redis = [
+    "faststream[redis]>=0.7.5",
+]
+
 ai = [
     "mdit-py-plugins>=0.6.1",
     "openai>=3.16.2",
@@ -51,7 +56,24 @@ docs = [
 ]
 test = [
     "fakeredis[lua]>=2.40.0",
+    "httpx>=0.28.0",
+    "locust>=2.37.0",
     "pytest>=9.2.0",
+    "pytest-asyncio>=1.0.0",
+    "testcontainers[redis,rabbitmq]>=4.10.0",
+    "websocket-client>=1.8.0",
+    "websockets>=15.0.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+pythonpath = ["."]
+markers = [
+    "integration: requires Docker via testcontainers",
+    "e2e: multi-instance Docker Compose scenarios",
+    "destructive: e2e that stop/kill instances and restore the stack",
+    "load: locust load scenarios (manual / nightly)",
 ]
 
 # ---------------------------------------------------------------------------

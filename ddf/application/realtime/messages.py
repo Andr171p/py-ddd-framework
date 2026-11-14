@@ -12,7 +12,7 @@ class Event[T](BaseModel):
     Отвечает на вопрос: что произошло и какие данные доставляются клиенту?
     """
 
-    model_config = ConfigDict(alias_generator=to_camel, frozen=True)
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, frozen=True)
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4)
     type: str
@@ -23,6 +23,9 @@ class Event[T](BaseModel):
 
 class Subscription(BaseModel):
     """На какой ресурс клиент хочет подписаться."""
+
+    model_config = ConfigDict(frozen=True)
+
     topic: str = Field(min_length=1, max_length=64)
     key: str = Field(min_length=1, max_length=128)
 
@@ -44,7 +47,7 @@ class Unsubscribe(BaseModel):
 
 
 class Reply[T](BaseModel):
-    model_config = ConfigDict(alias_generator=to_camel, frozen=True)
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, frozen=True)
 
     type: str
     reply_to: uuid.UUID | None = None
@@ -52,7 +55,7 @@ class Reply[T](BaseModel):
 
 
 class ErrorPayload(BaseModel):
-    model_config = ConfigDict(alias_generator=to_camel, frozen=True)
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, frozen=True)
 
     code: str = Field(min_length=1, description="Строковый код ошибки в snake_case")
     message: str = Field(min_length=1, description="Человекочитаемое сообщение об ошибке")

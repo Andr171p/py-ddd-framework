@@ -3,7 +3,7 @@ from typing import Any
 from faststream.rabbit import RabbitBroker, RabbitExchange
 
 from ddf.application.realtime import Event, RealtimePublisher, Room
-from ddf.application.realtime.dtos import RealtimeDelivery
+from ddf.infra.realtime.dtos import RealtimeDelivery
 
 
 def create_rabbit_realtime_publisher(

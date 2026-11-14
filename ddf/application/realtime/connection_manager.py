@@ -38,7 +38,7 @@ class ConnectionManager:
         return len(self._connections)
 
     @contextmanager
-    async def connect(self, connection: Connection) -> Iterator[Connection]:
+    def connect(self, connection: Connection) -> Iterator[Connection]:
         if self._closing:
             raise RuntimeError("ConnectionManager is shutting down")
 
@@ -91,8 +91,8 @@ class ConnectionManager:
         conn_subscriptions[subscription] = room
         self._attach(connection, room)
 
-        if previous is None and previous != room:
-            self._release_if_unused(connection, room)
+        if previous is not None and previous != room:
+            self._release_if_unused(connection, previous)
 
     def unsubscribe(self, connection: Connection, subscription: Subscription) -> None:
         self._require(connection)
@@ -103,7 +103,7 @@ class ConnectionManager:
             self._release_if_unused(connection, room)
 
     def emit(self, event: Event[Any], *, to: Room) -> None:
-        payload = event.model_dump(mode="json", by_alias=True, exclude_none=True)
+        payload = event.model_dump_json(by_alias=True, exclude_none=True)
 
         if len(payload.encode("utf-8")) > self.max_message_bytes:
             raise ValueError("Serialized realtime event is too large")
