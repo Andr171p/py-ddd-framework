@@ -1,4 +1,4 @@
-from typing import Annotated, Literal
+from typing import Annotated, Literal, cast
 
 from fastapi import Depends, Query
 from pydantic import BaseModel
@@ -14,6 +14,9 @@ class Sort(BaseModel):
 def parse_sort_query_param(param: str | None) -> Sort:
     """Парсит query-параметр сортировки."""
 
+    if param is None:
+        raise ValueError("Sort query param cannot be empty.")
+
     cleaned = param.strip()
     if not cleaned:
         raise ValueError("Sort query param cannot be empty.")
@@ -24,7 +27,10 @@ def parse_sort_query_param(param: str | None) -> Sort:
 
     elif ":" in cleaned:
         field, raw_direction = cleaned.split(":", maxsplit=1)
-        direction = raw_direction.lower()
+        normalized = raw_direction.lower()
+        if normalized not in ("asc", "desc"):
+            raise ValueError(f"Invalid sort direction: {normalized!r}.Expected 'asc' or 'desc'.")
+        direction = cast(SortDirection, normalized)
 
     else:
         field = cleaned
@@ -32,9 +38,6 @@ def parse_sort_query_param(param: str | None) -> Sort:
 
     if not field:
         raise ValueError("Sort field cannot be empty.")
-
-    if direction not in ("asc", "desc"):
-        raise ValueError(f"Invalid sort direction: {direction!r}." "Expected 'asc' or 'desc'.")
 
     return Sort(field=field, direction=direction)
 

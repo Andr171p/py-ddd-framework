@@ -30,19 +30,21 @@ async def test_int08_unsubscribe_stops_delivery(base_url, subject, ticket_key, h
 @pytest.mark.integration
 async def test_int09_forbidden_subscription(redis_url):
     denied_key = unique_key("denied")
-    async with run_tickets_server(
-        {
-            "REDIS_URL": redis_url,
-            "REALTIME_BACKEND": "none",
-            "DENIED_TICKETS": denied_key,
-            "WS_ADMISSION__MAX_CONCURRENT_CONNECTIONS": "5",
-            "WS_ADMISSION__LEASE_TTL": "PT8S",
-        }
-    ) as (url, _app):
-        async with connect_ws(url, subject=unique_key("user")) as client:
-            reply = await client.subscribe("ticket", denied_key)
-            assert reply["type"] == "error"
-            assert reply["payload"]["code"] == "forbidden"
+    async with (
+        run_tickets_server(
+            {
+                "REDIS_URL": redis_url,
+                "REALTIME_BACKEND": "none",
+                "DENIED_TICKETS": denied_key,
+                "WS_ADMISSION__MAX_CONCURRENT_CONNECTIONS": "5",
+                "WS_ADMISSION__LEASE_TTL": "PT8S",
+            }
+        ) as (url, _app),
+        connect_ws(url, subject=unique_key("user")) as client,
+    ):
+        reply = await client.subscribe("ticket", denied_key)
+        assert reply["type"] == "error"
+        assert reply["payload"]["code"] == "forbidden"
 
 
 @pytest.mark.integration

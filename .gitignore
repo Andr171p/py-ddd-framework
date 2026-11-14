@@ -40,6 +40,7 @@ MANIFEST
 
 # Тесты и покрытие
 .coverage
+requirements-audit.txt
 htmlcov/
 .tox/
 .nox/

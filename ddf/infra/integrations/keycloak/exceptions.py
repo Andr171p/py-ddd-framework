@@ -1,4 +1,3 @@
-
 class KeycloakVerificationError(Exception):
     """Базовое исключение для локальной верификации access токена Keycloak."""
 

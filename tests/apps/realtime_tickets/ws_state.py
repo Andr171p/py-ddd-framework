@@ -1,5 +1,6 @@
-from collections.abc import MutableMapping
 from typing import Any
+
+from collections.abc import MutableMapping
 
 from starlette.types import ASGIApp, Receive, Scope, Send
 

@@ -57,7 +57,7 @@ class MongoRepository[EntityT: Entity, ModelT: MongoBaseModel]:
     async def update(self, entity: EntityT) -> None:
         model = self.data_mapper.to_model(entity)
         doc = model.model_dump(by_alias=True)
-        await self._collection.replace_one({"_id": model.id}, doc, upsert=True)
+        await self._collection.replace_one({"_id": entity.id}, doc, upsert=True)
 
     async def exists(self, uid: UUID) -> bool:
         return await self._collection.count_documents({"_id": uid}, limit=1) > 0
@@ -68,6 +68,8 @@ class MongoRepository[EntityT: Entity, ModelT: MongoBaseModel]:
     async def get_by_ids(self, ids: Sequence[UUID]) -> tuple[EntityT, ...]:
         cursor = self._collection.find({"_id": {"$in": list(ids)}})
         return tuple(
-            self.data_mapper.from_model(self.model.model_validate(doc, by_alias=True))
-            async for doc in cursor
+            [
+                self.data_mapper.from_model(self.model.model_validate(doc, by_alias=True))
+                async for doc in cursor
+            ]
         )

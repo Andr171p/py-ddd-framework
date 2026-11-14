@@ -6,7 +6,6 @@ from .base import Base
 
 
 class DataMapper[EntityT: Entity, ModelT: Base](Protocol):
-
     def to_model(self, entity: EntityT) -> ModelT: ...
 
     def from_model(self, model: ModelT) -> EntityT: ...

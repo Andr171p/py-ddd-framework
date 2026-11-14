@@ -1,4 +1,3 @@
-
 from typing import Literal
 
 from pydantic import AnyHttpUrl, Field, NonNegativeFloat, PositiveFloat, PositiveInt
@@ -42,4 +41,7 @@ class KeycloakConfig(BaseSettings):
     max_token_bytes: PositiveInt = 32 * 1024
     max_jwks_bytes: PositiveInt = 256 * 1024
     max_jwks_keys: PositiveInt = 128
-    min_rsa_key_bits: int = Field(default=2048, ge=2048,)
+    min_rsa_key_bits: int = Field(
+        default=2048,
+        ge=2048,
+    )

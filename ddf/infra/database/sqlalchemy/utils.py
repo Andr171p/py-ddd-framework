@@ -39,12 +39,15 @@ class _CursorPayload(BaseModel):
     id: UUID
     value: datetime | None = None
 
+
 # ==========================================================================================================
 # Cursor codec
 # ==========================================================================================================
 
 
-def _encode_cursor(payload: _CursorPayload,) -> str:
+def _encode_cursor(
+    payload: _CursorPayload,
+) -> str:
     """
     Кодирует внутреннее состояние cursor в URL-safe Base64.
 
@@ -84,7 +87,7 @@ def _get_sort_func(direction: SortDirection) -> SortFunc:
     return asc if direction.lower() == "asc" else desc
 
 
-def _get_model_column[ModelT: Base](model: type[ModelT], field: str) -> ...:
+def _get_model_column[ModelT: Base](model: type[ModelT], field: str) -> Any:
     """Возвращает mapped column ORM модели."""
 
     if model.__table__.c.get(field) is None:
@@ -121,6 +124,7 @@ def apply_sorting[ModelT: Base](
         return stmt.order_by(sort_func(model.id))
 
     return stmt.order_by(sort_func(column), sort_func(model.id))
+
 
 # ==========================================================================================================
 # Cursor ordering
@@ -237,6 +241,7 @@ def _build_next_cursor[ModelT: Base](model: ModelT, *, field: CursorField, direc
     )
     return _encode_cursor(payload)
 
+
 # ==========================================================================================================
 # Pagination strategies
 # ==========================================================================================================
@@ -287,7 +292,7 @@ async def _paginate_by_cursor[ModelT: Base](
 
     has_next = len(models) > pagination.size
 
-    models = models[:pagination.size]
+    models = models[: pagination.size]
     next_cursor: str | None = None
 
     if has_next and models:
@@ -315,6 +320,7 @@ async def _paginate_by_offset[ModelT: Base](
 
     result = await session.scalars(stmt)
     return list(result.all()), {"total": total}
+
 
 # ==========================================================================================================
 # Public API
@@ -368,7 +374,7 @@ def is_unique_violation(exc: IntegrityError) -> bool:
     if isinstance(orig, asyncpg.exceptions.UniqueViolationError):
         return True
 
-    return bool(hasattr(orig, "sqlstate") and orig.sqlstate == _POSTGRES_UNIQUE_VIOLATION_CODE)
+    return getattr(orig, "sqlstate", None) == _POSTGRES_UNIQUE_VIOLATION_CODE
 
 
 def get_constraint_name(exc: IntegrityError) -> str | None:

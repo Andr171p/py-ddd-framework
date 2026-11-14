@@ -35,11 +35,11 @@ class ObjectStorage(Protocol):
     async def get_metadata(self, storage_key: str) -> ObjectMeta: ...
 
     async def upload_stream(
-            self,
-            file_stream: AsyncReadable,
-            storage_key: str,
-            mime_type: str,
-            chunk_size: int = 5 * 1024 * 1024,
+        self,
+        file_stream: AsyncReadable,
+        storage_key: str,
+        mime_type: str,
+        chunk_size: int = 5 * 1024 * 1024,
     ) -> None: ...
 
     async def download_stream(

@@ -9,19 +9,13 @@ from ddf.application.limits.policies import ConcurrencyPolicy
 from .concurrency_lease import RedisConcurrencyLease
 
 _ACQUIRE_LUA = (
-    files("ddf.infra.limits.concurrency.redis")
-    .joinpath("scripts", "acquire.lua")
-    .read_text(encoding="utf-8")
+    files("ddf.infra.limits.concurrency.redis").joinpath("scripts", "acquire.lua").read_text(encoding="utf-8")
 )
 _RENEW_LUA = (
-    files("ddf.infra.limits.concurrency.redis")
-    .joinpath("scripts", "renew.lua")
-    .read_text(encoding="utf-8")
+    files("ddf.infra.limits.concurrency.redis").joinpath("scripts", "renew.lua").read_text(encoding="utf-8")
 )
 _RELEASE_LUA = (
-    files("ddf.infra.limits.concurrency.redis")
-    .joinpath("scripts", "release.lua")
-    .read_text(encoding="utf-8")
+    files("ddf.infra.limits.concurrency.redis").joinpath("scripts", "release.lua").read_text(encoding="utf-8")
 )
 
 

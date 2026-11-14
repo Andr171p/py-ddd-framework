@@ -11,9 +11,11 @@ def create_rabbit_realtime_publisher(
     *,
     exchange: RabbitExchange,
 ) -> RealtimePublisher:
-
     async def publish(event: Event[Any], *, to: Room) -> None:
-        delivery = RealtimeDelivery[Any](room=to, event=event,)
+        delivery = RealtimeDelivery[Any](
+            room=to,
+            event=event,
+        )
         await broker.publish(
             delivery.model_dump(mode="json", by_alias=True),
             exchange=exchange,

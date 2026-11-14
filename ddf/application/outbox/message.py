@@ -15,8 +15,7 @@ class OutboxStatus(StrEnum):
 
 @dataclass(slots=True, kw_only=True)
 class OutboxMessage:
-
-    id: uuid.UUID = field(default_factory=uuid.uuid7)  # type: ignore
+    id: uuid.UUID = field(default_factory=uuid.uuid7)
     type: str
     occurred_on: datetime
     payload: Mapping[str, Any]

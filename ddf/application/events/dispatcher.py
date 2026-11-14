@@ -7,10 +7,10 @@ from .types import CollectedEvent, EventPublisher
 
 class EventDispatcher:
     def __init__(
-            self,
-            uow: UnitOfWork,
-            evnt_publisher: EventPublisher,
-            event_store: EventStore | None = None,
+        self,
+        uow: UnitOfWork,
+        evnt_publisher: EventPublisher,
+        event_store: EventStore | None = None,
     ) -> None:
         self._uow = uow
         self._event_publisher = evnt_publisher

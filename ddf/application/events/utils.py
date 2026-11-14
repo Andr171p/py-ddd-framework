@@ -1,7 +1,7 @@
-from typing import Any
+from typing import Any, cast
 
 import asyncio
-from collections.abc import Awaitable, Callable, Iterable
+from collections.abc import Awaitable, Callable, Hashable, Iterable, Mapping
 from dataclasses import asdict, fields
 from functools import cache
 
@@ -13,8 +13,12 @@ _EVENT_FIELDS: frozenset[str] = frozenset(field.name for field in fields(Event))
 
 
 @cache
-def _get_event_type_adapter(event_cls: type[Event]) -> TypeAdapter[Event]:
-    return TypeAdapter(event_cls)
+def _cached_event_adapter(event_cls: Hashable) -> TypeAdapter[Any]:
+    return TypeAdapter(cast(Any, event_cls))
+
+
+def _get_event_type_adapter(event_cls: type[Event]) -> TypeAdapter[Any]:
+    return _cached_event_adapter(cast(Hashable, event_cls))
 
 
 def get_event_payload(event: Event) -> dict[str, Any]:
@@ -24,7 +28,7 @@ def get_event_payload(event: Event) -> dict[str, Any]:
     return {k: v for k, v in event_dict.items() if k not in _EVENT_FIELDS}
 
 
-def deserialize_event(event_type: str, payload: dict[str, Any]) -> Event:
+def deserialize_event(event_type: str, payload: Mapping[str, Any]) -> Event:
     """Восстанавливает событие из сохранённого состояния."""
 
     if (event_cls := Event.get_event_class(event_type)) is None:

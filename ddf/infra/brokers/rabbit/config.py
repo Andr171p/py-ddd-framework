@@ -18,4 +18,6 @@ class RabbitConfig(BaseSettings):
 
     @property
     def uri(self) -> str:
-        return f"amqp://{self.username}:{self.password}@{self.host}:{self.port}/{self.virtualhost.lstrip('/')}"
+        return (
+            f"amqp://{self.username}:{self.password}@{self.host}:{self.port}/{self.virtualhost.lstrip('/')}"
+        )

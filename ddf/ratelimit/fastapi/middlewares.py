@@ -28,7 +28,6 @@ app.add_middleware(
 ```
 """
 
-
 from collections.abc import Callable, Iterable
 
 from fastapi import Request, status

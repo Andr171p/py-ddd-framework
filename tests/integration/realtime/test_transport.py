@@ -69,6 +69,6 @@ async def test_int18_invalid_commands_counter_and_reset(base_url, subject, ticke
 @pytest.mark.integration
 async def test_int19_admission_requires_subject(base_url):
     ws_url = base_url.replace("http://", "ws://") + "/ws?org=acme"
-    with pytest.raises(Exception):
+    with pytest.raises((websockets.WebSocketException, TimeoutError, OSError)):
         async with websockets.connect(ws_url, open_timeout=3):
             pass

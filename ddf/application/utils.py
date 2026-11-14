@@ -5,7 +5,8 @@ from uuid import UUID
 
 from ddf.domain.models import Entity
 
-from .dtos import CursorPagination, Pagination, next_pagination
+from .dtos import Pagination, next_pagination
+from .dtos.pagination import CursorMeta, CursorPagination, OffsetMeta, OffsetPagination
 from .exceptions import NotFoundError
 from .repositories import Repository
 
@@ -13,7 +14,7 @@ from .repositories import Repository
 async def get_or_raise_not_found[EntityT: Entity](
     func: Callable[[UUID], Awaitable[EntityT | None]],
     uid: UUID,
-    entity_type: type[EntityT],
+    entity_type: type[Entity],
 ) -> EntityT:
     if (obj := await func(uid)) is None:
         raise NotFoundError(f"{entity_type.__name__} with ID {uid} not found.")
@@ -53,7 +54,15 @@ async def iterate_batches[EntityT: Entity](
         if not page.meta.has_next:
             break
 
-        pagination = next_pagination(pagination, page.meta)
+        meta = page.meta
+        if isinstance(pagination, OffsetPagination) and isinstance(meta, OffsetMeta):  # noqa: SIM114
+            pagination = next_pagination(pagination, meta)
+        elif isinstance(pagination, CursorPagination) and isinstance(meta, CursorMeta):
+            pagination = next_pagination(pagination, meta)
+        else:
+            raise TypeError(
+                f"Pagination {type(pagination).__name__} does not match metadata {type(meta).__name__}."
+            )
 
 
 __all__ = ["get_or_raise_not_found", "iterate_batches"]

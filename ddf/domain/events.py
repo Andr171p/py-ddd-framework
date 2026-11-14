@@ -11,7 +11,7 @@ class Event:
 
     _registry: ClassVar[dict[str, type["Event"]]] = {}
 
-    event_id: uuid.UUID = field(default_factory=uuid.uuid7)  # type: ignore
+    event_id: uuid.UUID = field(default_factory=uuid.uuid7)
     event_type: ClassVar[str]
 
     occurred_on: datetime = field(default_factory=lambda: datetime.now(UTC))

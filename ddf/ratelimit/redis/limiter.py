@@ -44,7 +44,10 @@ class RedisRateLimiter:
         if cost > call.limit:
             raise ValueError("cost exceeds policy capacity")
 
-        raw = await self._get_script(call.script)(keys=[self._key(key, call)], args=call.args,)
+        raw = await self._get_script(call.script)(
+            keys=[self._key(key, call)],
+            args=call.args,
+        )
         allowed, remaining, retry_ms = map(int, raw)
 
         return RateLimitResult(

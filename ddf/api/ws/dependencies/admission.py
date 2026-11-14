@@ -20,6 +20,7 @@ type WsAdmitter = Callable[..., AsyncIterator[WsAdmission]]
 @dataclass(frozen=True, slots=True)
 class WsAdmission:
     """Представляет результат допуска одного соединения."""
+
     subject_key: str
     lost: asyncio.Event
 
@@ -46,7 +47,6 @@ async def _renew_lease(lease: ConcurrencyLease, lost: asyncio.Event, interval: f
 
 
 def create_ws_admitter(get_subject_key: Callable[..., str | Awaitable[str]]) -> WsAdmitter:
-
     async def admit_websocket(
         subject_key: Annotated[str, Depends(get_subject_key)],
         ws: Ws,
@@ -58,7 +58,6 @@ def create_ws_admitter(get_subject_key: Callable[..., str | Awaitable[str]]) -> 
             policy=config.connect_rate_policy,
         )
         if not rate.allowed:
-
             headers: dict[str, str] | None = None
             if rate.retry_after is not None:
                 seconds = math.ceil(rate.retry_after.total_seconds())
