@@ -2,6 +2,7 @@ from .config import OutboxConfig
 from .message import OutboxMessage
 from .outbox_store import OutboxStore
 from .processor import OutboxProcessor, exponential_retry_policy
+from .utils import save_events_to_outbox
 
 __all__ = [
     "OutboxConfig",
@@ -9,4 +10,5 @@ __all__ = [
     "OutboxProcessor",
     "OutboxStore",
     "exponential_retry_policy",
+    "save_events_to_outbox",
 ]
