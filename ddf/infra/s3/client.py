@@ -34,7 +34,7 @@ class S3Client:
                         "aws_access_key_id": self._config.access_key,
                         "aws_secret_access_key": self._config.secret_key.get_secret_value(),
                     }
-                    self._client = self._stack.enter_async_context(
+                    self._client = await self._stack.enter_async_context(
                         self.session.create_client(
                             **kwargs,
                             config=AioConfig(s3={"addressing_style": self._config.addressing_style}),
