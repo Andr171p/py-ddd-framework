@@ -1,5 +1,6 @@
 from typing import Any, BinaryIO
 
+import asyncio
 from collections.abc import AsyncIterator
 from contextlib import AsyncExitStack, asynccontextmanager
 
@@ -18,20 +19,37 @@ class S3Client:
     def __init__(self, config: S3Config) -> None:
         self._config = config
         self.session = get_session()
+        self._stack = AsyncExitStack()
+        self._client: AioBaseClient | None = None
+        self._lock = asyncio.Lock()
+
+    async def _ensure_client(self) -> AioBaseClient:
+        if self._client is None:
+            async with self._lock:
+                if self._client is None:
+                    kwargs = {
+                        "service_name": self._config.service_name,
+                        "endpoint_url": str(self._config.endpoint_url),
+                        "region_name": self._config.region,
+                        "aws_access_key_id": self._config.access_key,
+                        "aws_secret_access_key": self._config.secret_key.get_secret_value(),
+                    }
+                    self._client = self._stack.enter_async_context(
+                        self.session.create_client(
+                            **kwargs,
+                            config=AioConfig(s3={"addressing_style": self._config.addressing_style}),
+                        )
+                    )
+
+        return self._client
 
     @asynccontextmanager
     async def get_client(self) -> AsyncIterator[AioBaseClient]:
-        kwargs = {
-            "service_name": self._config.service_name,
-            "endpoint_url": str(self._config.endpoint_url),
-            "region_name": self._config.region,
-            "aws_access_key_id": self._config.access_key,
-            "aws_secret_access_key": self._config.secret_key.get_secret_value(),
-        }
-        async with self.session.create_client(
-            **kwargs, config=AioConfig(s3={"addressing_style": self._config.addressing_style})
-        ) as client:
-            yield client
+        yield await self._ensure_client()
+
+    async def close(self) -> None:
+        await self._stack.aclose()
+        self._client = None
 
     async def upload(self, file: bytes | BinaryIO, storage_key: str, content_type: str) -> None:
         async with self.get_client() as client:
