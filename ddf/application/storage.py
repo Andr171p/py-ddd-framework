@@ -19,6 +19,11 @@ class MultipartPart:
     etag: str
 
 
+@dataclass(frozen=True, slots=True)
+class UploadedMultipartPart(MultipartPart):
+    size_bytes: int
+
+
 class AsyncReadable(Protocol):
     async def read(self, size: int = -1) -> bytes: ...
 
@@ -75,7 +80,14 @@ class MultipartStorage(Protocol):
 
     async def abort_multipart_upload(self, storage_key: str, upload_id: str) -> None: ...
 
-    async def list_multipart_parts(self, storage_key: str, upload_id: str) -> list[MultipartPart]: ...
+    async def list_multipart_parts(self, storage_key: str, upload_id: str) -> list[UploadedMultipartPart]: ...
 
 
-__all__ = ["AsyncReadable", "MultipartPart", "MultipartStorage", "ObjectMeta", "ObjectStorage"]
+__all__ = [
+    "AsyncReadable",
+    "MultipartPart",
+    "MultipartStorage",
+    "ObjectMeta",
+    "ObjectStorage",
+    "UploadedMultipartPart",
+]
