@@ -10,7 +10,7 @@ from aiobotocore.session import get_session
 from botocore.exceptions import ClientError
 
 from ddf.application.exceptions import NotFoundError
-from ddf.application.storage import AsyncReadable, MultipartPart, ObjectMeta
+from ddf.application.storage import AsyncReadable, MultipartPart, ObjectMeta, UploadedMultipartPart
 
 from .config import DEFAULT_MIN_CHUNK_SIZE, MAX_PART_NUMBER, S3Config
 
@@ -289,8 +289,8 @@ class S3Client:
                 ) from exc
             raise
 
-    async def list_multipart_parts(self, storage_key: str, upload_id: str) -> list[MultipartPart]:
-        parts: list[MultipartPart] = []
+    async def list_multipart_parts(self, storage_key: str, upload_id: str) -> list[UploadedMultipartPart]:
+        parts: list[UploadedMultipartPart] = []
 
         try:
             async with self.get_client() as client:
@@ -301,14 +301,18 @@ class S3Client:
                     UploadId=upload_id,
                 ):
                     parts.extend(
-                        MultipartPart(part_number=item["PartNumber"], etag=item["ETag"])
-                        for item in page.get("Parts", [])
+                        UploadedMultipartPart(
+                            part_number=part["PartNumber"],
+                            etag=part["ETag"],
+                            size_bytes=part["Size"]
+                        )
+                        for part in page.get("Parts", [])
                     )
         except ClientError as exc:
             code = exc.response["Error"]["Code"]
             if code in {"404", "NoSuchUpload"}:
                 raise NotFoundError(
-                    f"Multipart upload {upload_id!r} for key {storage_key!r} not found"
+                    f"Multipart upload {upload_id!r} for key {storage_key!r} not found",
                 ) from exc
             raise
 

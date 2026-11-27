@@ -9,7 +9,12 @@ async def save_events_to_outbox(outbox: OutboxStore, *entities: Entity) -> None:
     """Переносит накопленные доменные события в outbox текущей транзакции."""
 
     messages = [
-        OutboxMessage(type=event.event_type, occurred_on=event.occurred_on, payload=serialize_event(event))
+        OutboxMessage(
+            id=event.event_id,
+            type=event.event_type,
+            occurred_on=event.occurred_on,
+            payload=serialize_event(event),
+        )
         for entity in entities
         for event in entity.collect_events()
     ]
