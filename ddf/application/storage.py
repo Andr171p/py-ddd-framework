@@ -1,6 +1,6 @@
 from typing import BinaryIO, Protocol
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -11,6 +11,12 @@ class ObjectMeta:
     content_type: str
     last_modified: datetime
     checksum: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class MultipartPart:
+    part_number: int
+    etag: str
 
 
 class AsyncReadable(Protocol):
@@ -49,4 +55,27 @@ class ObjectStorage(Protocol):
     ) -> AsyncIterator[bytes]: ...
 
 
-__all__ = ["AsyncReadable", "ObjectMeta", "ObjectStorage"]
+class MultipartStorage(Protocol):
+    async def create_multipart_upload(self, storage_key: str, content_type: str) -> str: ...
+
+    async def create_upload_part_url(
+        self,
+        storage_key: str,
+        upload_id: str,
+        part_number: int,
+        expires_in: int = 3600,
+    ) -> str: ...
+
+    async def complete_multipart_upload(
+        self,
+        storage_key: str,
+        upload_id: str,
+        parts: Sequence[MultipartPart],
+    ) -> None: ...
+
+    async def abort_multipart_upload(self, storage_key: str, upload_id: str) -> None: ...
+
+    async def list_multipart_parts(self, storage_key: str, upload_id: str) -> list[MultipartPart]: ...
+
+
+__all__ = ["AsyncReadable", "MultipartPart", "MultipartStorage", "ObjectMeta", "ObjectStorage"]

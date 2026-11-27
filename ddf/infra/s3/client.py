@@ -1,7 +1,7 @@
 from typing import Any, BinaryIO
 
 import asyncio
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Sequence
 from contextlib import AsyncExitStack, asynccontextmanager
 
 from aiobotocore.client import AioBaseClient
@@ -10,9 +10,9 @@ from aiobotocore.session import get_session
 from botocore.exceptions import ClientError
 
 from ddf.application.exceptions import NotFoundError
-from ddf.application.storage import AsyncReadable, ObjectMeta
+from ddf.application.storage import AsyncReadable, MultipartPart, ObjectMeta
 
-from .config import DEFAULT_MIN_CHUNK_SIZE, S3Config
+from .config import DEFAULT_MIN_CHUNK_SIZE, MAX_PART_NUMBER, S3Config
 
 
 class S3Client:
@@ -118,8 +118,13 @@ class S3Client:
                     last_modified=response["LastModified"],
                     checksum=response.get("ChecksumSHA256"),
                 )
-        except ClientError:
-            raise NotFoundError(f"Object with key {storage_key!r} not found") from None
+        except ClientError as exc:
+            code = exc.response["Error"]["Code"]
+
+            if code in {"404", "NoSuchKey", "NotFound"}:
+                raise NotFoundError(f"Object with key {storage_key!r} not found") from exc
+
+            raise
 
     async def upload_stream(
         self,
@@ -210,3 +215,101 @@ class S3Client:
                 body.close()
         finally:
             await stack.aclose()
+
+    async def create_multipart_upload(self, storage_key: str, content_type: str) -> str:
+        async with self.get_client() as client:
+            response = await client.create_multipart_upload(
+                Bucket=self._config.bucket,
+                Key=storage_key,
+                ContentType=content_type,
+            )
+            return response["UploadId"]
+
+    async def create_upload_part_url(
+        self,
+        storage_key: str,
+        upload_id: str,
+        part_number: int,
+        expires_in: int = 3600,
+    ) -> str:
+        if not 1 <= part_number <= MAX_PART_NUMBER:
+            raise ValueError("part_number must be between 1 and 10000 for S3 multipart upload.")
+
+        async with self.get_client() as client:
+            return await client.generate_presigned_url(
+                "upload_part",
+                Params={
+                    "Bucket": self._config.bucket,
+                    "Key": storage_key,
+                    "UploadId": upload_id,
+                    "PartNumber": part_number,
+                },
+                ExpiresIn=expires_in,
+                HttpMethod="PUT",
+            )
+
+    async def complete_multipart_upload(
+        self,
+        storage_key: str,
+        upload_id: str,
+        parts: Sequence[MultipartPart],
+    ) -> None:
+        sorted_parts = sorted(parts, key=lambda part: part.part_number)
+        s3_parts = [{"PartNumber": part.part_number, "ETag": part.etag} for part in sorted_parts]
+
+        try:
+            async with self.get_client() as client:
+                await client.complete_multipart_upload(
+                    Bucket=self._config.bucket,
+                    Key=storage_key,
+                    UploadId=upload_id,
+                    MultipartUpload={"Parts": s3_parts},
+                )
+        except ClientError as exc:
+            code = exc.response["Error"]["Code"]
+            if code in {"404", "NoSuchUpload"}:
+                raise NotFoundError(
+                    f"Multipart upload {upload_id!r} for key {storage_key!r} not found",
+                ) from exc
+            raise
+
+    async def abort_multipart_upload(self, storage_key: str, upload_id: str) -> None:
+        try:
+            async with self.get_client() as client:
+                await client.abort_multipart_upload(
+                    Bucket=self._config.bucket,
+                    Key=storage_key,
+                    UploadId=upload_id,
+                )
+        except ClientError as exc:
+            code = exc.response["Error"]["Code"]
+            if code in {"404", "NoSuchUpload"}:
+                raise NotFoundError(
+                    f"Multipart upload {upload_id!r} for key {storage_key!r} not found",
+                ) from exc
+            raise
+
+    async def list_multipart_parts(self, storage_key: str, upload_id: str) -> list[MultipartPart]:
+        parts: list[MultipartPart] = []
+
+        try:
+            async with self.get_client() as client:
+                paginator = client.get_paginator("list_parts")
+                async for page in paginator.paginate(
+                    Bucket=self._config.bucket,
+                    Key=storage_key,
+                    UploadId=upload_id,
+                ):
+                    parts.extend(
+                        MultipartPart(part_number=item["PartNumber"], etag=item["ETag"])
+                        for item in page.get("Parts", [])
+                    )
+        except ClientError as exc:
+            code = exc.response["Error"]["Code"]
+            if code in {"404", "NoSuchUpload"}:
+                raise NotFoundError(
+                    f"Multipart upload {upload_id!r} for key {storage_key!r} not found"
+                ) from exc
+            raise
+
+        return parts

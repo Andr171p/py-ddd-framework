@@ -4,6 +4,7 @@ from pydantic import Field, HttpUrl, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEFAULT_MIN_CHUNK_SIZE = 5 * 1024 * 1024
+MAX_PART_NUMBER = 10_000
 
 
 class S3Config(BaseSettings):
