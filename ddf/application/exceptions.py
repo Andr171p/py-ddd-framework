@@ -34,3 +34,8 @@ class AlreadyExistsError(ApplicationError):
 class UniqueConstraintViolationError(ApplicationError):
     status_code = HTTPStatus.CONFLICT
     error_code = "unique_constraint_violation"
+
+
+class ConcurrentModificationError(ApplicationError):
+    status_code = HTTPStatus.CONFLICT
+    error_code = "concurrent_modification"

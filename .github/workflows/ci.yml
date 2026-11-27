@@ -59,7 +59,7 @@ jobs:
           python-version: "3.14"
           enable-cache: true
 
-      - run: uv sync --locked --group dev --group test
+      - run: uv sync --locked --group dev --group test --extra sqlalchemy
       - run: make test-unit
 
   integration:
