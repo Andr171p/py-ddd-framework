@@ -60,9 +60,13 @@ class S3Client:
                 ContentType=content_type,
             )
 
-    async def delete(self, storage_key: str) -> None:
+    async def delete(self, storage_key: str, *, version_id: str | None = None) -> None:
+        params: dict[str, str] = {"Bucket": self._config.bucket, "Key": storage_key}
+        if version_id is not None:
+            params["VersionId"] = version_id
+
         async with self.get_client() as client:
-            await client.delete_object(Bucket=self._config.bucket, Key=storage_key)
+            await client.delete_object(**params)
 
     async def delete_by_prefix(self, prefix: str) -> None:
         async with self.get_client() as client:
@@ -99,19 +103,33 @@ class S3Client:
                 HttpMethod="PUT",
             )
 
-    async def create_download_url(self, storage_key: str, expires_in: int = 3600) -> str:
+    async def create_download_url(
+        self,
+        storage_key: str,
+        expires_in: int = 3600,
+        *,
+        version_id: str | None = None,
+    ) -> str:
+        params: dict[str, str] = {"Bucket": self._config.bucket, "Key": storage_key}
+        if version_id is not None:
+            params["VersionId"] = version_id
+
         async with self.get_client() as client:
             return await client.generate_presigned_url(
                 "get_object",
-                Params={"Bucket": self._config.bucket, "Key": storage_key},
+                Params=params,
                 ExpiresIn=expires_in,
                 HttpMethod="GET",
             )
 
-    async def get_metadata(self, storage_key: str) -> ObjectMeta:
+    async def get_metadata(self, storage_key: str, *, version_id: str | None = None) -> ObjectMeta:
+        params: dict[str, str] = {"Bucket": self._config.bucket, "Key": storage_key}
+        if version_id is not None:
+            params["VersionId"] = version_id
+
         try:
             async with self.get_client() as client:
-                response = await client.head_object(Bucket=self._config.bucket, Key=storage_key)
+                response = await client.head_object(**params)
                 return ObjectMeta(
                     size=response["ContentLength"],
                     content_type=response["ContentType"],
@@ -197,14 +215,20 @@ class S3Client:
         self,
         storage_key: str,
         chunk_size: int = DEFAULT_MIN_CHUNK_SIZE,
+        *,
+        version_id: str | None = None,
     ) -> AsyncIterator[bytes]:
         """Потоковое чтение объекта из S3 - multipart download."""
+
+        params: dict[str, str] = {"Bucket": self._config.bucket, "Key": storage_key}
+        if version_id is not None:
+            params["VersionId"] = version_id
 
         stack = AsyncExitStack()
 
         try:
             client = await stack.enter_async_context(self.get_client())
-            response = await client.get_object(Bucket=self._config.bucket, Key=storage_key)
+            response = await client.get_object(**params)
 
             body = response["Body"]
 

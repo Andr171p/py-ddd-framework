@@ -31,7 +31,7 @@ class AsyncReadable(Protocol):
 class ObjectStorage(Protocol):
     async def upload(self, file: bytes | BinaryIO, storage_key: str, content_type: str) -> None: ...
 
-    async def delete(self, storage_key: str) -> None: ...
+    async def delete(self, storage_key: str, *, version_id: str | None = None) -> None: ...
 
     async def create_upload_url(
         self,
@@ -41,9 +41,15 @@ class ObjectStorage(Protocol):
         expires_in: int = 3600,
     ) -> str: ...
 
-    async def create_download_url(self, storage_key: str, expires_in: int = 3600) -> str: ...
+    async def create_download_url(
+        self,
+        storage_key: str,
+        expires_in: int = 3600,
+        *,
+        version_id: str | None = None,
+    ) -> str: ...
 
-    async def get_metadata(self, storage_key: str) -> ObjectMeta: ...
+    async def get_metadata(self, storage_key: str, *, version_id: str | None = None) -> ObjectMeta: ...
 
     async def upload_stream(
         self,
@@ -57,6 +63,8 @@ class ObjectStorage(Protocol):
         self,
         storage_key: str,
         chunk_size: int = 5 * 1024 * 1024,
+        *,
+        version_id: str | None = None,
     ) -> AsyncIterator[bytes]: ...
 
 
