@@ -44,7 +44,7 @@ async def update_versioned[EntityT: Entity, ModelT: Base](
 ) -> None:
     """Обновляет сущность с проверкой ожидаемой версии.
 
-    При конкурентном изменении выбрасывает ```ConcurrentModificationError``.
+    При конкурентном изменении выбрасывает ``ConcurrentModificationError``.
 
     Не выполняет commit транзакции.
     """

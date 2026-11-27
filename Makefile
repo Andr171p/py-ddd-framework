@@ -29,7 +29,7 @@ package-smoke:
 	uv run --no-project --python 3.14 python scripts/package_smoke.py
 
 test-unit:
-	$(UV_TEST) pytest tests/unit -q
+	$(UV_TEST) --extra sqlalchemy pytest tests/unit -q
 
 test-integration:
 	$(UV_DSL) pytest tests/integration -v --ignore=tests/integration/realtime
