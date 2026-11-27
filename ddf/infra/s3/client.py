@@ -302,9 +302,7 @@ class S3Client:
                 ):
                     parts.extend(
                         UploadedMultipartPart(
-                            part_number=part["PartNumber"],
-                            etag=part["ETag"],
-                            size_bytes=part["Size"]
+                            part_number=part["PartNumber"], etag=part["ETag"], size_bytes=part["Size"]
                         )
                         for part in page.get("Parts", [])
                     )
