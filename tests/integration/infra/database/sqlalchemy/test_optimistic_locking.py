@@ -39,7 +39,6 @@ async def _load_row(session: AsyncSession, widget_id) -> WidgetRow:
     return row
 
 
-@pytest.mark.anyio
 async def test_update_versioned(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="alpha", version=0)
 
@@ -73,7 +72,6 @@ async def test_update_versioned(session_factory: async_sessionmaker[AsyncSession
         assert row.updated_at == entity.updated_at
 
 
-@pytest.mark.anyio
 async def test_stale_version_rejected(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="v0", version=0)
 
@@ -105,7 +103,6 @@ async def test_stale_version_rejected(session_factory: async_sessionmaker[AsyncS
         assert row.name == "v1"
 
 
-@pytest.mark.anyio
 async def test_concurrent_updates(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="base", version=0)
 
@@ -144,7 +141,6 @@ async def test_concurrent_updates(session_factory: async_sessionmaker[AsyncSessi
         assert row.name in {"writer-a", "writer-b"}
 
 
-@pytest.mark.anyio
 async def test_updated_at_consistency(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="ts", version=0)
     old_updated_at = widget.updated_at - timedelta(hours=1)
@@ -182,7 +178,6 @@ async def test_updated_at_consistency(session_factory: async_sessionmaker[AsyncS
         assert row.updated_at.tzinfo is not None
 
 
-@pytest.mark.anyio
 async def test_transaction_rollback(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="rollback-me", version=0)
 
@@ -214,7 +209,6 @@ async def test_transaction_rollback(session_factory: async_sessionmaker[AsyncSes
         assert row.name == "rollback-me"
 
 
-@pytest.mark.anyio
 async def test_identity_map_synchronized(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="mapped", version=0)
 
@@ -243,7 +237,6 @@ async def test_identity_map_synchronized(session_factory: async_sessionmaker[Asy
         await session.commit()
 
 
-@pytest.mark.anyio
 async def test_immutable_fields_preserved(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="mutable", code="KEEP-ME", version=0)
 
@@ -276,7 +269,6 @@ async def test_immutable_fields_preserved(session_factory: async_sessionmaker[As
         assert row.version == 1
 
 
-@pytest.mark.anyio
 async def test_missing_entity(session_factory: async_sessionmaker[AsyncSession]) -> None:
     entity = make_widget(name="absent", version=0)
 
@@ -292,7 +284,6 @@ async def test_missing_entity(session_factory: async_sessionmaker[AsyncSession])
         assert exc_info.value.error_code == "concurrent_modification"
 
 
-@pytest.mark.anyio
 async def test_non_versioned_entity(session_factory: async_sessionmaker[AsyncSession]) -> None:
     async with session_factory() as session:
         with pytest.raises(TypeError, match="does not support versioned updates"):
@@ -304,7 +295,6 @@ async def test_non_versioned_entity(session_factory: async_sessionmaker[AsyncSes
             )
 
 
-@pytest.mark.anyio
 async def test_versioned_update_with_outbox(session_factory: async_sessionmaker[AsyncSession]) -> None:
     widget = make_widget(name="outbox-base", version=0)
 
@@ -342,7 +332,6 @@ async def test_versioned_update_with_outbox(session_factory: async_sessionmaker[
         assert messages[0].payload["name"] == "outbox-updated"
 
 
-@pytest.mark.anyio
 async def test_versioned_update_with_outbox_rolls_back_together(
     session_factory: async_sessionmaker[AsyncSession],
 ) -> None:
