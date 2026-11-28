@@ -135,6 +135,7 @@ class S3Client:
                     content_type=response["ContentType"],
                     last_modified=response["LastModified"],
                     checksum=response.get("ChecksumSHA256"),
+                    version_id=response.get("VersionId") or version_id,
                 )
         except ClientError as exc:
             code = exc.response["Error"]["Code"]

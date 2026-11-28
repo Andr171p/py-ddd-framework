@@ -11,6 +11,7 @@ class ObjectMeta:
     content_type: str
     last_modified: datetime
     checksum: str | None = None
+    version_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
